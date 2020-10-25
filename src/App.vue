@@ -1,17 +1,43 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <HomePage msg="Food Cost Calculator"/>
+    <List :items="items" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HomePage from './components/HomePage.vue';
+import List from "./components/RenderList.vue";
 
 export default {
   name: 'App',
+  Data() {
+    return {
+      items: [
+        {
+          name:"Bigos",
+          id:"",
+          ingredients:[
+           {
+            id:1,
+            name:"Szynka",
+            quantity:5,
+            price:10,
+            vat:5,
+            gros:"",
+            net:"",
+          }
+          ]
+        }
+      ]
+    }
+  },
+  methods: {
+
+  },
   components: {
-    HelloWorld
+    HomePage,
+    List,
   }
 }
 </script>
