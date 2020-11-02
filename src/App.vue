@@ -10,31 +10,41 @@ import HomePage from './components/HomePage.vue';
 import List from "./components/RenderList.vue";
 
 export default {
-  name: 'App',
-  Data() {
+  name: "App",
+  data() {
     return {
       items: [
         {
           name:"Bigos",
-          id:"",
+          id:1,
           ingredients:[
            {
             id:1,
-            name:"Szynka",
-            quantity:5,
-            price:10,
+            name:"Lopatka",
+            quantity:4.1,
+            price:10.45,
             vat:5,
             gros:"",
             net:"",
-          }
+           },
+           {
+            id:2,
+            name:"Kielbasa",
+            quantity:1.6,
+            price:20.99,
+            vat:5,
+            gros:"",
+            net:"",
+           },
           ]
         }
       ]
     }
   },
-  methods: {
 
+  methods: {
   },
+
   components: {
     HomePage,
     List,

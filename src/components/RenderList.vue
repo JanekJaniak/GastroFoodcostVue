@@ -2,7 +2,14 @@
   <div>
     <ul>
       <li v-for="item in items" :key="item.id">
-        {{ item.name }} 
+        <strong>{{ item.name }}</strong>
+        <br>
+        <ul>
+          <li v-for="ingredient in item.ingredients" :key="ingredient.id">
+            {{ingredient.name}}
+          </li>
+        </ul>
+        
       </li>
     </ul>
   </div>
@@ -26,14 +33,15 @@ export default {
 <style>
   
   ul {
+    list-style: none;
     display:flex;
     flex-direction: column;
-    align-items:center;
+    align-items:flex-start;
   }
 
   li {
-    list-style-type: none;
-    display: inline-flex;
+    /* list-style-type: none;
+    display: inline-flex; */
   }
 
 </style>
