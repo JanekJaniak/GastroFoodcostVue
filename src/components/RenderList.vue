@@ -8,22 +8,21 @@
           <li v-for="ingredient in item.ingredients" :key="ingredient.id">
           <strong>{{ingredient.name}}</strong>
           <span>Weight:</span>  
-          <input placeholder="Edit" v-model.number="quantity" type ="number"  @input="quantityInput" />
+          <input placeholder="Edit" v-model.number="ingredient.quantity" type ="number" />
           <span>Price:</span>
-          <input placeholder="Edit" v-model.number="price" type ="number"  @input="priceInput" />
+          <input placeholder="Edit" v-model.number="ingredient.price" type ="number" />
           <span>VAT:</span>
-          <select v-model="vat">
+          <select v-model.number="ingredient.vat" >
             <option  disabled value="">Select VAT</option>
             <option>5</option>
             <option>8</option>
             <option>23</option>
           </select>
-          <strong>Net Value:</strong>
+          <strong>Net Value:{{calculateValue(ingredient.quantity,ingredient.price)}}</strong>
           <strong>Gross Value:</strong>
           </li>
         </ul>
       </li>
-      <li>Total Value List</li>
     </ul>
   </div>
 </template>
@@ -33,28 +32,46 @@ export default {
   name: "List",
    data() {
     return {
-      vat:"",
-      quantity:"",
-      price:""
+      items: [
+        {
+          name:"Bigos",
+          id:1,
+          ingredients:[
+           {
+            id:1,
+            name:"Lopatka",
+            quantity:4.1,
+            price:10.45,
+            vat:5,
+            gros:"",
+            net:"",
+           },
+           {
+            id:2,
+            name:"Kielbasa",
+            quantity:1.6,
+            price:20.99,
+            vat:5,
+            gros:"",
+            net:"",
+           },
+          ]
+        }
+      ]
     }
   },
-  props: {
-    items: Array,
-  },
+
+
   methods: {
-      quantityInput(event) {
-      this.value = event.target.value;
-      console.log(this.value);
-    },         
-      priceInput(event) {
-      this.value = event.target.value;
-    },         
+       calculateValue(quantity,price) {
+         return (quantity*price).toFixed(2);
+      },         
   },
   
   components: {
 
   }
-};
+}
 </script>
 
 <style>
