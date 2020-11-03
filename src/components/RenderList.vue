@@ -2,16 +2,18 @@
   <div>
     <ul>
       <li v-for="item in items" :key="item.id">
-        <strong>{{ item.name }}</strong>
+        <strong> {{ item.name }} </strong>
         <br>
         <ul>
           <li v-for="ingredient in item.ingredients" :key="ingredient.id">
-            {{ingredient.name}}
-          <InputHandler :itemID="ingredient.id" :inputType="quantity"/>
-          <InputHandler :itemID="ingredient.id" :inputType="price"/>
+          <strong>{{ingredient.name}}</strong>
+          <span> Weight: </span>  
+          <InputHandler :itemID="ingredient.id" :action="changeQuantity" :actionName="quantity"/>
+          <span> Price:</span>
+          <InputHandler :itemID="ingredient.id" :action="changePrice" :actionName="price"/>
+          <VatSelector :itemID="ingredient.id" />
           </li>
         </ul>
-        
       </li>
     </ul>
   </div>
@@ -19,17 +21,24 @@
 
 <script>
 import InputHandler from "./InputHandler"
+import VatSelector from "./VatSelector"
 export default {
   name: "List",
   props: {
     items: Array,
   },
   methods: {
-
-    },
+    changeQuantity(itemID) {
+      console.log(itemID);
+    },           
+    changePrice(itemID) {
+      console.log(itemID);
+    },           
+  },
   
   components: {
-    InputHandler
+    InputHandler,
+    VatSelector
   }
 };
 </script>
@@ -41,6 +50,11 @@ export default {
     display:flex;
     flex-direction: column;
     align-items:flex-start;
+  }
+
+  li {
+    display: flex;
+    
   }
 
 </style>
