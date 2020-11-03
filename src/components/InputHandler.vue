@@ -1,7 +1,7 @@
 <template>
     <div>
-        <input  type ="number" :value="value" @input="handleInput" />
-        <!-- v-model.number="age" -->
+        <input placeholder="Edit" type ="number" :value="value" @input="handleInput" />
+        <!-- v-model.number="" -->
     </div>
 </template>
 
