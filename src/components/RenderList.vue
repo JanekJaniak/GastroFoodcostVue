@@ -2,43 +2,57 @@
   <div>
     <ul>
       <li v-for="item in items" :key="item.id">
-        <strong> {{ item.name }} </strong>
+        <strong> {{item.name}} </strong>
         <br>
         <ul>
           <li v-for="ingredient in item.ingredients" :key="ingredient.id">
           <strong>{{ingredient.name}}</strong>
-          <span> Weight: </span>  
-          <InputHandler :itemID="ingredient.id" :action="changeQuantity" :actionName="quantity"/>
-          <span> Price:</span>
-          <InputHandler :itemID="ingredient.id" :action="changePrice" :actionName="price"/>
-          <VatSelector :itemID="ingredient.id" />
+          <span>Weight:</span>  
+          <input placeholder="Edit" v-model.number="quantity" type ="number"  @input="quantityInput" />
+          <span>Price:</span>
+          <input placeholder="Edit" v-model.number="price" type ="number"  @input="priceInput" />
+          <span>VAT:</span>
+          <select v-model="vat">
+            <option  disabled value="">Select VAT</option>
+            <option>5</option>
+            <option>8</option>
+            <option>23</option>
+          </select>
+          <strong>Net Value:</strong>
+          <strong>Gross Value:</strong>
           </li>
         </ul>
       </li>
+      <li>Total Value List</li>
     </ul>
   </div>
 </template>
 
 <script>
-import InputHandler from "./InputHandler"
-import VatSelector from "./VatSelector"
 export default {
   name: "List",
+   data() {
+    return {
+      vat:"",
+      quantity:"",
+      price:""
+    }
+  },
   props: {
     items: Array,
   },
   methods: {
-    changeQuantity(itemID) {
-      console.log(itemID);
-    },           
-    changePrice(itemID) {
-      console.log(itemID);
-    },           
+      quantityInput(event) {
+      this.value = event.target.value;
+      console.log(this.value);
+    },         
+      priceInput(event) {
+      this.value = event.target.value;
+    },         
   },
   
   components: {
-    InputHandler,
-    VatSelector
+
   }
 };
 </script>
