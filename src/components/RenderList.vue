@@ -7,6 +7,8 @@
         <ul>
           <li v-for="ingredient in item.ingredients" :key="ingredient.id">
             {{ingredient.name}}
+          <InputHandler :itemID="ingredient.id" :inputType="quantity"/>
+          <InputHandler :itemID="ingredient.id" :inputType="price"/>
           </li>
         </ul>
         
@@ -16,6 +18,7 @@
 </template>
 
 <script>
+import InputHandler from "./InputHandler"
 export default {
   name: "List",
   props: {
@@ -26,6 +29,7 @@ export default {
     },
   
   components: {
+    InputHandler
   }
 };
 </script>
@@ -37,11 +41,6 @@ export default {
     display:flex;
     flex-direction: column;
     align-items:flex-start;
-  }
-
-  li {
-    /* list-style-type: none;
-    display: inline-flex; */
   }
 
 </style>
