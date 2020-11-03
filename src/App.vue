@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <HomePage msg="Food Cost Calculator"/>
-    <List :items="items" />
+    <List />
   </div>
 </template>
 
@@ -11,36 +11,7 @@ import List from "./components/RenderList.vue";
 
 export default {
   name: "App",
-  data() {
-    return {
-      items: [
-        {
-          name:"Bigos",
-          id:1,
-          ingredients:[
-           {
-            id:1,
-            name:"Lopatka",
-            quantity:4.1,
-            price:10.45,
-            vat:5,
-            gros:"",
-            net:"",
-           },
-           {
-            id:2,
-            name:"Kielbasa",
-            quantity:1.6,
-            price:20.99,
-            vat:5,
-            gros:"",
-            net:"",
-           },
-          ]
-        }
-      ]
-    }
-  },
+  
 
   methods: {
   },
