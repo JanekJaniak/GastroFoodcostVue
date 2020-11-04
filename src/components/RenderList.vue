@@ -1,29 +1,30 @@
 <template>
   <div>
-    <ul>
-      <li v-for="item in items" :key="item.id">
+      <div v-for="item in items" :key="item.id">
         <strong> {{item.name}} </strong>
         <br>
-        <ul>
-          <li v-for="ingredient in item.ingredients" :key="ingredient.id">
+        <div>
+          <div v-for="ingredient in item.ingredients" :key="ingredient.id">
           <strong>{{ingredient.name}}</strong>
-          <span>Weight:</span>  
+          <label>Weight:</label>  
           <input placeholder="Edit" v-model.number="ingredient.quantity" type ="number" />
-          <span>Price/Kg:</span>
+          <label>Price/Kg:</label>
           <input placeholder="Edit" v-model.number="ingredient.price" type ="number" />
-          <span>VAT:</span>
-          <select v-model.number="ingredient.vat" >
-            <option  disabled value="">Select VAT</option>
-            <option value="1.05">5</option>
-            <option value="1.08">8</option>
-            <option value="1.23">23</option>
+          <label>VAT:</label>
+          <select v-model="ingredient.vat" >
+            <option v-for="option in ingredient.options" :value="option.value" :key="option.id" >
+              {{option.text}}
+            </option>
           </select>
           <strong>Net Value:{{calculateNetValue(ingredient.quantity,ingredient.price)}}</strong>
           <strong>Gross Value:{{calculateGrossValue(ingredient.quantity,ingredient.price,ingredient.vat)}}</strong>
-          </li>
-        </ul>
-      </li>
-    </ul>
+          </div>
+        </div>
+      </div>
+    <div>
+      <input @input="handleInput">
+      <button @click="addIngredient">Add new ingredient</button>
+    </div>
   </div>
 </template>
 
@@ -42,7 +43,13 @@ export default {
             name:"Lopatka",
             quantity:4.1,
             price:10.45,
-            vat:"",
+            vat:"1",
+            options: [
+              { text: "Select Vat", value:1},
+              { text: "5", value:1.05},
+              { text: "8", value:1.08},
+              { text: "23", value:1.23}
+            ],
             gross:"",
             net:"",
            },
@@ -62,11 +69,18 @@ export default {
   },
   methods: {
       calculateNetValue(quantity,price) {
-         return (quantity*price).toFixed(2);
+         return (quantity * price).toFixed(2);
       },
       calculateGrossValue(quantity,price,vat) {
-        return ((quantity*price)*vat).toFixed(2);
-      }         
+        return (quantity * price * vat).toFixed(2);
+      },
+      addIngredient() {
+        console.log('hej');
+      },
+      handleInput() {
+        console.log('hejhej');
+      }
+
   },
   components: {
   }
@@ -74,13 +88,5 @@ export default {
 </script>
 
 <style>
-  ul {
-    list-style: none;
-    display:flex;
-    flex-direction: column;
-    align-items:flex-start;
-  }
-  li {
-    display: flex;
-  }
+ 
 </style>
