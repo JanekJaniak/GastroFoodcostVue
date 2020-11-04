@@ -4,27 +4,27 @@
         <h3> {{item.name}} </h3>
         <div>
           <div v-for="ingredient in item.ingredients" :key="ingredient.id">
-          <strong>{{ingredient.name}}</strong>
-          <label>Weight:</label>  
-          <input placeholder="Edit" v-model.number="ingredient.quantity" type ="number" />
-          <label>Price/Kg:</label>
-          <input placeholder="Edit" v-model.number="ingredient.price" type ="number" />
-          <label>VAT:</label>
-          <select v-model="ingredient.vat" >
-            <option v-for="option in vatOptions" :value="option.value" :key="option.id" :disabled="option.disabled" >
-              {{option.text}}
-            </option>
-          </select>
-          <strong>Net Value:{{calculateNetValue(ingredient.quantity,ingredient.price)}}</strong>
-          <strong>Gross Value:{{calculateGrossValue(ingredient.quantity,ingredient.price,ingredient.vat)}}</strong>
+            <strong>{{ingredient.name}}</strong>
+            <label for = "weight">Weight:</label>  
+            <input id = "weight" placeholder="Edit" v-model.number="ingredient.quantity" type ="number" />
+            <label for = "price">Price/Kg:</label>
+            <input id = "price" placeholder="Edit" v-model.number="ingredient.price" type ="number" />
+            <label>VAT:</label>
+            <select v-model="ingredient.vat" >
+              <option v-for="option in vatOptions" :value="option.value" :key="option.id" :disabled="option.disabled" >
+                {{option.text}}
+              </option>
+            </select>
+            <strong>Net Value:{{calculateNetValue(ingredient.quantity,ingredient.price)}}</strong>
+            <strong>Gross Value:{{calculateGrossValue(ingredient.quantity,ingredient.price,ingredient.vat)}}</strong>
           </div>
         </div>
+        <div>
+          <input placeholder="Ingredient name" @input="handleInput">
+          <button @click="addIngredient">Add new ingredient</button>
+        </div>
+        <button>SAVE</button>
       </div>
-    <div>
-      <input placeholder="Ingredient name" @input="handleInput">
-      <button @click="addIngredient">Add new ingredient</button>
-    </div>
-    <button>SAVE</button>
   </div>
 </template>
 
@@ -76,11 +76,18 @@ export default {
       },
       handleInput(event) {
         this.value = event.target.value;
-        console.log(this.value);
       },
       addIngredient() {
-
-        console.log('hej');
+        const newIngredient = {
+          id:Date.now(),
+          name:this.value,
+          quantity:"",
+          price:"",
+          vat:"1",
+          gross:"",
+          net:"",
+        };
+        this.items[0].ingredients.push(newIngredient);
       }
   },
   components: {
