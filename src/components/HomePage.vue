@@ -15,4 +15,9 @@ export default {
 
 <style scoped>
 
+  h1 {
+    color: green;
+    font-weight: 1000;
+  }
+
 </style>

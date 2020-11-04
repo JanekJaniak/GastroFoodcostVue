@@ -1,8 +1,7 @@
 <template>
   <div>
       <div v-for="item in items" :key="item.id">
-        <strong> {{item.name}} </strong>
-        <br>
+        <h3> {{item.name}} </h3>
         <div>
           <div v-for="ingredient in item.ingredients" :key="ingredient.id">
           <strong>{{ingredient.name}}</strong>
@@ -12,7 +11,7 @@
           <input placeholder="Edit" v-model.number="ingredient.price" type ="number" />
           <label>VAT:</label>
           <select v-model="ingredient.vat" >
-            <option v-for="option in ingredient.options" :value="option.value" :key="option.id" >
+            <option v-for="option in vatOptions" :value="option.value" :key="option.id" :disabled="option.disabled" >
               {{option.text}}
             </option>
           </select>
@@ -22,9 +21,10 @@
         </div>
       </div>
     <div>
-      <input @input="handleInput">
+      <input placeholder="Ingredient name" @input="handleInput">
       <button @click="addIngredient">Add new ingredient</button>
     </div>
+    <button>SAVE</button>
   </div>
 </template>
 
@@ -44,12 +44,6 @@ export default {
             quantity:4.1,
             price:10.45,
             vat:"1",
-            options: [
-              { text: "Select Vat", value:1},
-              { text: "5", value:1.05},
-              { text: "8", value:1.08},
-              { text: "23", value:1.23}
-            ],
             gross:"",
             net:"",
            },
@@ -58,13 +52,19 @@ export default {
             name:"Kielbasa",
             quantity:1.6,
             price:20.99,
-            vat:"",
+            vat:"1",
             gross:"",
             net:"",
            },
           ]
         }
-      ]
+      ],
+      vatOptions: [
+              { text: "Select Vat", value:1, disabled: true},
+              { text: "5", value:1.05},
+              { text: "8", value:1.08},
+              { text: "23", value:1.23}
+      ],
     }
   },
   methods: {
@@ -74,13 +74,14 @@ export default {
       calculateGrossValue(quantity,price,vat) {
         return (quantity * price * vat).toFixed(2);
       },
-      addIngredient() {
-        console.log('hej');
+      handleInput(event) {
+        this.value = event.target.value;
+        console.log(this.value);
       },
-      handleInput() {
-        console.log('hejhej');
-      }
+      addIngredient() {
 
+        console.log('hej');
+      }
   },
   components: {
   }
