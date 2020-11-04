@@ -9,17 +9,17 @@
           <strong>{{ingredient.name}}</strong>
           <span>Weight:</span>  
           <input placeholder="Edit" v-model.number="ingredient.quantity" type ="number" />
-          <span>Price:</span>
+          <span>Price/Kg:</span>
           <input placeholder="Edit" v-model.number="ingredient.price" type ="number" />
           <span>VAT:</span>
           <select v-model.number="ingredient.vat" >
             <option  disabled value="">Select VAT</option>
-            <option>5</option>
-            <option>8</option>
-            <option>23</option>
+            <option value="1.05">5</option>
+            <option value="1.08">8</option>
+            <option value="1.23">23</option>
           </select>
-          <strong>Net Value:{{calculateValue(ingredient.quantity,ingredient.price)}}</strong>
-          <strong>Gross Value:</strong>
+          <strong>Net Value:{{calculateNetValue(ingredient.quantity,ingredient.price)}}</strong>
+          <strong>Gross Value:{{calculateGrossValue(ingredient.quantity,ingredient.price,ingredient.vat)}}</strong>
           </li>
         </ul>
       </li>
@@ -42,8 +42,8 @@ export default {
             name:"Lopatka",
             quantity:4.1,
             price:10.45,
-            vat:5,
-            gros:"",
+            vat:"",
+            gross:"",
             net:"",
            },
            {
@@ -51,8 +51,8 @@ export default {
             name:"Kielbasa",
             quantity:1.6,
             price:20.99,
-            vat:5,
-            gros:"",
+            vat:"",
+            gross:"",
             net:"",
            },
           ]
@@ -60,32 +60,27 @@ export default {
       ]
     }
   },
-
-
   methods: {
-       calculateValue(quantity,price) {
+      calculateNetValue(quantity,price) {
          return (quantity*price).toFixed(2);
-      },         
+      },
+      calculateGrossValue(quantity,price,vat) {
+        return ((quantity*price)*vat).toFixed(2);
+      }         
   },
-  
   components: {
-
   }
 }
 </script>
 
 <style>
-  
   ul {
     list-style: none;
     display:flex;
     flex-direction: column;
     align-items:flex-start;
   }
-
   li {
     display: flex;
-    
   }
-
 </style>
