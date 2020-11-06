@@ -5,12 +5,12 @@
         <div>
           <div v-for="(ingredient, index) in item.ingredients" :key="ingredient.id">
             <strong>{{ingredient.name}}</strong>
-            <label :for="`weight-${index}`" >Weight:</label>  
-            <input :id="`weight-${index}`" placeholder="Edit" v-model.number ="ingredient.quantity" type="number"/>
-            <label :for="`price-${index}`" >Price/Kg:</label>
-            <input :id="`price-${index}`" placeholder="Edit" v-model.number ="ingredient.price" type="number"/>
+            <label :for="`weight-${index}`">Weight:</label>  
+            <input :id="`weight-${index}`" placeholder="Edit" v-model.number="ingredient.quantity" type="number"/>
+            <label :for="`price-${index}`">Price/Kg:</label>
+            <input :id="`price-${index}`" placeholder="Edit" v-model.number="ingredient.price" type="number"/>
             <label>VAT:</label>
-            <select v-model="ingredient.vat" >
+            <select v-model="ingredient.vat">
               <option v-for="option in vatOptions" :value="option.value" :key="option.id" :disabled="option.disabled">
                 {{option.text}}
               </option>
@@ -61,14 +61,15 @@ export default {
         }
       ],
       vatOptions: [
-              { text: "Select Vat", value:1, disabled: true},
-              { text: "5", value:1.05},
-              { text: "8", value:1.08},
-              { text: "23", value:1.23}
+        { text: "Select Vat", value:1, disabled: true},
+        { text: "5", value:1.05},
+        { text: "8", value:1.08},
+        { text: "23", value:1.23}      
       ],
       value: "",
     }
   },
+  
   methods: {
       calculateNetValue(quantity,price) {
          return (quantity * price).toFixed(2);
@@ -96,8 +97,8 @@ export default {
         };
 
         if(this.value) {
-        this.items[index].ingredients.push(newIngredient);
-        this.value= "";
+          this.items[index].ingredients.push(newIngredient);
+          this.value = "";
         }
       }
   },
