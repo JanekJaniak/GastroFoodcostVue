@@ -1,27 +1,27 @@
 <template>
   <div>
-      <div v-for="item in items" :key="item.id">
+      <div v-for="(item, index) in items" :key="item.id">
         <h3> {{item.name}} </h3>
         <div>
-          <div v-for="ingredient in item.ingredients" :key="ingredient.id">
+          <div v-for="(ingredient, index) in item.ingredients" :key="ingredient.id">
             <strong>{{ingredient.name}}</strong>
-            <label for = "weight">Weight:</label>  
-            <input id = "weight" placeholder="Edit" v-model.number="ingredient.quantity" type ="number" />
-            <label for = "price">Price/Kg:</label>
-            <input id = "price" placeholder="Edit" v-model.number="ingredient.price" type ="number" />
+            <label :for="`weight-${index}`">Weight:</label>  
+            <input :id="`weight-${index}`" placeholder="Edit" v-model.number="ingredient.quantity" type="number"/>
+            <label :for="`price-${index}`">Price/Kg:</label>
+            <input :id="`price-${index}`" placeholder="Edit" v-model.number="ingredient.price" type="number"/>
             <label>VAT:</label>
-            <select v-model="ingredient.vat" >
-              <option v-for="option in vatOptions" :value="option.value" :key="option.id" :disabled="option.disabled" >
+            <select v-model="ingredient.vat">
+              <option v-for="option in vatOptions" :value="option.value" :key="option.id" :disabled="option.disabled">
                 {{option.text}}
               </option>
             </select>
-            <strong>Net Value:{{calculateNetValue(ingredient.quantity,ingredient.price)}}</strong>
-            <strong>Gross Value:{{calculateGrossValue(ingredient.quantity,ingredient.price,ingredient.vat)}}</strong>
+            <strong>Net Value:{{calculateNetValue(ingredient.quantity, ingredient.price)}}</strong>
+            <strong>Gross Value:{{calculateGrossValue(ingredient.quantity, ingredient.price, ingredient.vat)}}</strong>
           </div>
         </div>
         <div>
-          <input placeholder="Ingredient name" @input="handleInput">
-          <button @click="addIngredient">Add new ingredient</button>
+          <input placeholder="Ingredient name" @keypress.enter="addIngredient(index)"  @input="handleInput" :value="value">
+          <button @click="addIngredient(index)">Add new ingredient</button>
         </div>
         <button>SAVE</button>
       </div>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { uuid } from 'vue-uuid'; 
 export default {
   name: "List",
    data() {
@@ -60,34 +61,45 @@ export default {
         }
       ],
       vatOptions: [
-              { text: "Select Vat", value:1, disabled: true},
-              { text: "5", value:1.05},
-              { text: "8", value:1.08},
-              { text: "23", value:1.23}
+        { text: "Select Vat", value:1, disabled: true},
+        { text: "5", value:1.05},
+        { text: "8", value:1.08},
+        { text: "23", value:1.23}      
       ],
+      value: "",
     }
   },
+  
   methods: {
       calculateNetValue(quantity,price) {
          return (quantity * price).toFixed(2);
       },
+
       calculateGrossValue(quantity,price,vat) {
         return (quantity * price * vat).toFixed(2);
       },
+
       handleInput(event) {
         this.value = event.target.value;
       },
-      addIngredient() {
+
+      addIngredient(index) {
+        const newID = uuid.v4();
+
         const newIngredient = {
-          id:Date.now(),
-          name:this.value,
-          quantity:"",
-          price:"",
-          vat:"1",
-          gross:"",
-          net:"",
+          id: newID,
+          name: this.value,
+          quantity: "",
+          price: "",
+          vat: "1",
+          gross: "",
+          net: "",
         };
-        this.items[0].ingredients.push(newIngredient);
+
+        if(this.value) {
+          this.items[index].ingredients.push(newIngredient);
+          this.value = "";
+        }
       }
   },
   components: {

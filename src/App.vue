@@ -12,7 +12,6 @@ import List from "./components/RenderList.vue";
 export default {
   name: "App",
   
-
   methods: {
   },
 
