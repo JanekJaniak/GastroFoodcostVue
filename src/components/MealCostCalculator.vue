@@ -146,15 +146,18 @@ export default {
           this.meal.portions.portionsCount = portionCount;
         }
 
+        portionCount < 1 ? 0 : portionCount;
+
         return portionCount;
       },
 
       totalNetCost() {
         let total = 0;
         this.meal.ingredients.forEach(ingredient => {
-        
         total += parseFloat(ingredient.net);
         });
+
+        total = total.toFixed(2);
         this.meal.totalNetCost = total;
       
         return total;
@@ -163,9 +166,10 @@ export default {
       totalGrossCost() {
         let total = 0;
         this.meal.ingredients.forEach(ingredient => {
-        
         total += parseFloat(ingredient.gross);
         });
+
+        total = total.toFixed(2);
         this.meal.totalGrossCost = total;
 
         return total;
