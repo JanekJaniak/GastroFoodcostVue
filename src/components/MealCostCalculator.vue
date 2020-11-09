@@ -1,49 +1,72 @@
 <template>
-  <div>
-        <h3> {{meal.name}} </h3>
-        <div>
-          <div v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" :key="id">
-            <strong>{{name}}</strong>
-            <label :for="`weight-${ingredientIndex}`">Weight:</label>  
-            <input 
+  <div class = "tableContainer">
+    <h3> {{meal.name}} </h3>
+      <table class ="ingredientTable" border ="1">
+        <thead>
+          <th v-for="header in tHeader" :key = "header.id">{{header.name}}</th>
+        </thead>
+        <tbody>
+          <tr v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" :key="id">
+            <td><strong>{{name}}</strong></td>
+            <td><input 
               :id="`weight-${ingredientIndex}`" 
               placeholder="Edit" 
               v-model.number="meal.ingredients[ingredientIndex].quantity"  
               type="number"
-            />
-            <label :for="`price-${ingredientIndex}`">Price/Kg:</label>
-            <input :id="`price-${ingredientIndex}`" placeholder="Edit" v-model.number="meal.ingredients[ingredientIndex].price" type="number"/>
-            <label>VAT:</label>
-            <select v-model="meal.ingredients[ingredientIndex].vat">
+            /></td>
+            <td><input 
+              :id="`price-${ingredientIndex}`" 
+              placeholder="Edit" 
+              v-model.number="meal.ingredients[ingredientIndex].price" 
+              type="number"
+            /></td>
+            <td><select v-model="meal.ingredients[ingredientIndex].vat">
               <option v-for="option in vatOptions" :value="option.value" :key="option.id" :disabled="option.disabled">
                 {{option.text}}
               </option>
-            </select>
-            <strong>Net Value:{{calculateNetValue(quantity, price, ingredientIndex)}}</strong>
-            <strong>Gross Value:{{calculateGrossValue(quantity,price,vat, ingredientIndex)}}</strong>
-          </div>
-        </div>
-        <div>
-          <input placeholder="Ingredient name" @keypress.enter="addIngredient()"  @input="handleInput" :value="value">
-          <button @click="addIngredient()">Add new ingredient</button>
-        </div>
-        <div>
-          <label :for="`totalWeight`">Total weight/Kg:</label>
-          <input type="number" :id="`totalWeight`" placeholder="Edit" v-model.number="meal.portions.totalWeight">
-          <label :for="`portionWeight`">Portion weight/g:</label>
-          <input type="number" :id="`portionWeight`" placeholder="Edit" v-model.number="meal.portions.portionWeight">
-          <strong>Number of servings: {{calculatePortionsCount(meal.portions.totalWeight, meal.portions.portionWeight)}}</strong>
-        </div>
-        <div>
-          <strong>Total net cost: {{totalNetCost()}}</strong>
-          <strong>Total gross cost: {{totalGrossCost()}}</strong>
-        </div>
-        <div>
-          <strong>Portion net cost: {{portionNetCost()}}</strong>
-          <strong>Portion gross cost: {{portionGrossCost()}}</strong>
-        </div>
-        <button>SAVE</button>
+            </select></td>
+            <td><strong>{{calculateNetValue(quantity, price, ingredientIndex)}}</strong></td>
+            <td><strong>{{calculateGrossValue(quantity, price, vat, ingredientIndex)}}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="newIngredient">
+        <input placeholder="Ingredient name" @keypress.enter="addIngredient()"  @input="handleInput" :value="value">
+        <button class="dim button" @click="addIngredient()">Add new ingredient</button>
       </div>
+      <table class="weightTable" border = "1">
+        <thead>
+          <th>Total weight/Kg:</th>
+          <th>Portion weight/g:</th>
+          <th>Number of servings:</th>
+        </thead>
+        <tbody>
+          <td><input type="number" :id="`totalWeight`" placeholder="Edit" v-model.number="meal.portions.totalWeight"></td>
+          <td><input type="number" :id="`portionWeight`" placeholder="Edit" v-model.number="meal.portions.portionWeight"></td>
+          <td>{{calculatePortionsCount(meal.portions.totalWeight, meal.portions.portionWeight)}}</td>
+        </tbody>
+      </table>
+      <table class="costTable" border = "1">
+        <thead>
+          <th></th>
+          <th>Net cost:</th>
+          <th>Gross cost:</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Total:</strong></td>
+            <td>{{totalNetCost()}}</td>
+            <td>{{totalGrossCost()}}</td>
+          </tr>
+          <tr>
+            <td><strong>Per portion:</strong></td>
+            <td>{{portionNetCost()}}</td>
+            <td>{{portionGrossCost()}}</td>
+          </tr>
+        </tbody>
+      </table>
+    <button class="dim button">SAVE</button>
+  </div>
 </template>
 
 <script>
@@ -95,6 +118,14 @@ export default {
         { text: "23", value:1.23}      
       ],
       value: "",
+      tHeader: [
+        {id: 1, name: "Ingredient"}, 
+        {id: 2, name: "Price"}, 
+        {id: 3, name: "Weight/kg"}, 
+        {id: 4, name: "VAT"}, 
+        {id: 5, name: "Net value"}, 
+        {id: 6, name: "Gross value"} 
+      ],
     }
   },
   
@@ -208,5 +239,66 @@ export default {
 </script>
 
 <style>
+
+th, td {
+  border: none;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  padding-bottom: 0.5rem;
+}
+
+input{
+  border-style: solid;
+  border-width: 1px;
+  background-color: rgb(245, 245, 245);
+  padding: 0.2rem;
+}
+
+.costTable, .weightTable {
+  border: none;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  margin: 1rem;
+  margin-left:auto; 
+  margin-right:0;
+}
+
+.ingredientTable {
+  width: 100%;
+  border: none;
+}
+
+.tableContainer {
+  margin: 0 auto;
+  width: 80vw;
+  max-width: 1000px;
+  position: relative;
+}
+
+.dim {
+  opacity: 1;
+  transition: opacity .15s ease-in;
+}
+
+.dim:hover, .dim:focus {
+  opacity: .5;
+  transition: opacity .15s ease-in;
+}
+
+.dim:active {
+  opacity: .8;
+  transition: opacity .15s ease-out;
+}
+
+.button {
+  margin: 1rem;;
+  font-size: .675rem;
+  padding: 0.3rem 0.8rem 0.3rem 0.8rem;
+  border-width: 0.2rem;
+  border-color: navy;
+  background-color: white;
+  font-weight:lighter;
+}
+
  
 </style>
