@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <HomePage msg="Meal Cost Calculator"/>
+    <HomePage msg="Gastro Helper"/>
     <MealCostCalculator />
   </div>
 </template>
