@@ -42,7 +42,12 @@
       </tbody>
     </table>
     <div class="newIngredient">
-      <input placeholder="Ingredient name" @keypress.enter="addIngredient()"  @input="handleInput" :value="value">
+      <input 
+        placeholder="Ingredient name" 
+        @keypress.enter="addIngredient()"  
+        @input="handleInput" 
+        :value="newIngredientInputValue"
+      >
       <button class="dim button" @click="addIngredient()">Add new ingredient</button>
     </div>
     <table class="weight-table">
@@ -128,7 +133,7 @@ export default {
         { text: "8", value:1.08},
         { text: "23", value:1.23}      
       ],
-      value: "",
+      newIngredientInputValue: "",
       tHeader: [
         {id: 1, name: "Ingredient"}, 
         {id: 2, name: "Price"}, 
@@ -155,7 +160,7 @@ export default {
       },
 
       handleInput(event) {
-        this.value = event.target.value;
+        this.newIngredientInputValue = event.target.value;
       },
 
       addIngredient() {
@@ -163,7 +168,7 @@ export default {
 
         const newIngredient = {
           id: newID,
-          name: this.value,
+          name: this.newIngredientInputValue,
           quantity: "",
           price: "",
           vat: "1",
@@ -171,9 +176,9 @@ export default {
           net: "",
         };
 
-        if(this.value) {
+        if(this.newIngredientInputValue) {
           this.meal.ingredients.push(newIngredient);
-          this.value = "";
+          this.newIngredientInputValue = "";
         }
       },
 
@@ -356,6 +361,5 @@ select {
 .remove-button-wrapper {
   border: none;
 }
-
 
 </style>
