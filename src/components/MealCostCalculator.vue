@@ -11,18 +11,20 @@
           <td><strong>{{name}}</strong></td>
           <td>
             <input 
-            :id="`weight-${ingredientIndex}`" 
-            placeholder="Edit" 
-            v-model.number="meal.ingredients[ingredientIndex].quantity"  
-            type="number"
+              :id="`weight-${ingredientIndex}`" 
+              placeholder="Edit" 
+              v-model.number="meal.ingredients[ingredientIndex].quantity"  
+              type="number"
+              onFocus="this.select()"
             />
           </td>
           <td>
             <input 
-            :id="`price-${ingredientIndex}`" 
-            placeholder="Edit" 
-            v-model.number="meal.ingredients[ingredientIndex].price" 
-            type="number"
+              :id="`price-${ingredientIndex}`" 
+              placeholder="Edit" 
+              v-model.number="meal.ingredients[ingredientIndex].price" 
+              type="number"
+              onFocus="this.select()"
             />
           </td>
           <td><select v-model="meal.ingredients[ingredientIndex].vat">
@@ -62,10 +64,22 @@
       </thead>
       <tbody>
         <td>
-          <input type="number" :id="`totalWeight`" placeholder="Edit" v-model.number="meal.portions.totalWeight">
+          <input 
+            type="number" 
+            :id="`totalWeight`" 
+            placeholder="Edit" 
+            v-model.number="meal.portions.totalWeight" 
+            onFocus="this.select()"
+          >
         </td>
         <td>
-          <input type="number" :id="`portionWeight`" placeholder="Edit" v-model.number="meal.portions.portionWeight">
+          <input 
+            type="number" 
+            :id="`portionWeight`" 
+            placeholder="Edit" 
+            v-model.number="meal.portions.portionWeight" 
+            onFocus="this.select()"
+          >
         </td>
         <td>{{calculatePortionsCount(meal.portions.totalWeight, meal.portions.portionWeight)}}</td>
       </tbody>
@@ -104,28 +118,28 @@ export default {
         id: 1,
         ingredients: [
           {
-          id: 1,
-          name: "Lopatka",
-          quantity : 4.1,
-          price: 10.45,
-          vat: "1", 
-          gross: 0,
-          net: 0,
+            id: 1,
+            name: "Lopatka",
+            quantity : 4.1,
+            price: 10.45,
+            vat: "1", 
+            gross: 0,
+            net: 0,
           },
           {
-          id: 2,
-          name: "Kielbasa",
-          quantity: 1.6,
-          price: 20.99,
-          vat: "1",
-          gross: 0,
-          net: 0,
+            id: 2,
+            name: "Kielbasa",
+            quantity: 1.6,
+            price: 20.99,
+            vat: "1",
+            gross: 0,
+            net: 0,
           },
         ],
         portions: {
-          totalWeight: "",
-          portionWeight: "",
-          portionsCount: "",
+          totalWeight: 0,
+          portionWeight: 0,
+          portionsCount: 0,
           portionNetCost: 0,
           portionGrossCost: 0,
         },
@@ -180,11 +194,11 @@ export default {
         const newIngredient = {
           id: newID,
           name: this.newIngredientInputValue,
-          quantity: "",
-          price: "",
+          quantity: 0,
+          price: 0,
           vat: "1",
-          gross: "",
-          net: "",
+          gross: 0,
+          net: 0,
         };
 
         if(this.newIngredientInputValue) {
@@ -196,10 +210,7 @@ export default {
       calculatePortionsCount(totalWeight, portionWeight) {
         let portionCount = 0;
 
-        if ((this.meal.portions.totalWeight == "" && this.meal.portions.totalWeight == 0) || 
-            (this.meal.portions.portionWeight == "" && this.meal.portions.portionWeight == 0)) {
-          portionCount = 0;
-        } else {
+        if (this.meal.portions.totalWeight && this.meal.portions.portionWeight ) {  
           portionCount = totalWeight / (portionWeight / 1000);
           portionCount = portionCount < 1 ? 0 : Math.round(portionCount);
 
@@ -234,13 +245,10 @@ export default {
       },
 
       portionNetCost() {
-        let portion = this.meal.totalNetCost / this.meal.portions.portionsCount;
+        let portion = 0;
+        if (this.meal.totalNetCost && this.meal.portions.portionsCount) {
+          portion = (this.meal.totalNetCost / this.meal.portions.portionsCount).toFixed(2); 
 
-        if ((this.meal.totalNetCost == "" && this.meal.totalNetCost == 0) ||
-            (this.meal.portions.portionsCount == "" && this.meal.portions.portionsCount == 0)) {
-          portion = 0;
-        } else {
-          portion = (this.meal.totalNetCost / this.meal.portions.portionsCount).toFixed(2);
           this.meal.portions.portionNetCost = portion;
         }
 
@@ -248,13 +256,10 @@ export default {
       },
 
       portionGrossCost() {
-        let portion = this.meal.totalGrossCost / this.meal.portions.portionsCount;
+        let portion = 0;
+        if (this.meal.totalGrossCost && this.meal.portions.portionsCount) {
+          portion = (this.meal.totalGrossCost / this.meal.portions.portionsCount).toFixed(2); 
 
-        if ((this.meal.totalGrossCost == "" && this.meal.totalGrossCost == 0) || 
-            (this.meal.portions.portionsCount == "" && this.meal.portions.portionsCount == 0)) {
-          portion = 0;
-        } else {
-          portion = (this.meal.totalGrossCost / this.meal.portions.portionsCount).toFixed(2);
           this.meal.portions.portionGrossCost = portion;
         }
 
