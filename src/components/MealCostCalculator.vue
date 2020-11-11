@@ -1,7 +1,7 @@
 <template>
   <div class="table-container">
     <h2>Food Cost Calculator</h2>
-    <h3> {{meal.name}} </h3>
+    <h3>{{meal.name}}</h3>
     <table class="ingredient-table">
       <thead>
         <th v-for="header in tHeader" :key="header.id">{{header.name}}</th>
@@ -35,8 +35,12 @@
               {{option.text}}
             </option>
           </select></td>
-          <td><strong>{{calculateNetValue(quantity, price, ingredientIndex)}}</strong></td>
-          <td><strong>{{calculateGrossValue(quantity, price, vat, ingredientIndex)}}</strong></td>
+          <td>
+            <strong>{{calculateNetValue(quantity, price, ingredientIndex)}}</strong>
+          </td>
+          <td>
+            <strong>{{calculateGrossValue(quantity, price, vat, ingredientIndex)}}</strong>
+          </td>
           <td class="remove-button-wrapper" @click="removeItem(id)"><button class="remove-button">X</button></td>
         </tr>
       </tbody>
@@ -57,8 +61,12 @@
         <th>Number of servings:</th>
       </thead>
       <tbody>
-        <td><input type="number" :id="`totalWeight`" placeholder="Edit" v-model.number="meal.portions.totalWeight"></td>
-        <td><input type="number" :id="`portionWeight`" placeholder="Edit" v-model.number="meal.portions.portionWeight"></td>
+        <td>
+          <input type="number" :id="`totalWeight`" placeholder="Edit" v-model.number="meal.portions.totalWeight">
+        </td>
+        <td>
+          <input type="number" :id="`portionWeight`" placeholder="Edit" v-model.number="meal.portions.portionWeight">
+        </td>
         <td>{{calculatePortionsCount(meal.portions.totalWeight, meal.portions.portionWeight)}}</td>
       </tbody>
     </table>
@@ -92,32 +100,32 @@ export default {
    data() {
     return {
       meal: {
-        name:"Bigos",
-        id:1,
-        ingredients:[
+        name: "Bigos",
+        id: 1,
+        ingredients: [
           {
-          id:1,
-          name:"Lopatka",
-          quantity:4.1,
-          price:10.45,
-          vat:"1", 
-          gross:0,
-          net:0,
+          id: 1,
+          name: "Lopatka",
+          quantity : 4.1,
+          price: 10.45,
+          vat: "1", 
+          gross: 0,
+          net: 0,
           },
           {
-          id:2,
-          name:"Kielbasa",
-          quantity:1.6,
-          price:20.99,
-          vat:"1",
-          gross:0,
-          net:0,
+          id: 2,
+          name: "Kielbasa",
+          quantity: 1.6,
+          price: 20.99,
+          vat: "1",
+          gross: 0,
+          net: 0,
           },
         ],
         portions: {
           totalWeight: "",
           portionWeight: "",
-          portionsCount:"",
+          portionsCount: "",
           portionNetCost: 0,
           portionGrossCost: 0,
         },
@@ -128,12 +136,14 @@ export default {
       },
 
       vatOptions: [
-        { text: "Select Vat", value:1, disabled: true},
-        { text: "5", value:1.05},
-        { text: "8", value:1.08},
-        { text: "23", value:1.23}      
+        { text: "Select Vat", value: 1, disabled: true},
+        { text: "5", value: 1.05},
+        { text: "8", value: 1.08},
+        { text: "23", value: 1.23}      
       ],
+
       newIngredientInputValue: "",
+
       tHeader: [
         {id: 1, name: "Ingredient"}, 
         {id: 2, name: "Price"}, 
@@ -147,12 +157,13 @@ export default {
   
   methods: {
       calculateNetValue(quantity, price, ingredientIndex) {
-        const netValue =  (quantity * price).toFixed(2);
+        const netValue = (quantity * price).toFixed(2);
         this.meal.ingredients[ingredientIndex].net = netValue
+
         return netValue;
       },
 
-      calculateGrossValue(quantity,price,vat, ingredientIndex) {
+      calculateGrossValue(quantity, price, vat, ingredientIndex) {
         const grossValue = (quantity * price * vat).toFixed(2);
         this.meal.ingredients[ingredientIndex].gross = grossValue;
 
@@ -188,13 +199,12 @@ export default {
         if ((this.meal.portions.totalWeight == "" && this.meal.portions.totalWeight == 0) || 
             (this.meal.portions.portionWeight == "" && this.meal.portions.portionWeight == 0)) {
           portionCount = 0;
-        } 
-        else {
-          portionCount = Math.round(totalWeight / (portionWeight / 1000));
+        } else {
+          portionCount = totalWeight / (portionWeight / 1000);
+          portionCount = portionCount < 1 ? 0 : Math.round(portionCount);
+
           this.meal.portions.portionsCount = portionCount;
         }
-
-        portionCount < 1 ? 0 : portionCount;
 
         return portionCount;
       },
@@ -202,7 +212,7 @@ export default {
       totalNetCost() {
         let total = 0;
         this.meal.ingredients.forEach(ingredient => {
-        total += parseFloat(ingredient.net);
+          total += parseFloat(ingredient.net);
         });
 
         total = total.toFixed(2);
@@ -214,7 +224,7 @@ export default {
       totalGrossCost() {
         let total = 0;
         this.meal.ingredients.forEach(ingredient => {
-        total += parseFloat(ingredient.gross);
+          total += parseFloat(ingredient.gross);
         });
 
         total = total.toFixed(2);
@@ -229,8 +239,7 @@ export default {
         if ((this.meal.totalNetCost == "" && this.meal.totalNetCost == 0) ||
             (this.meal.portions.portionsCount == "" && this.meal.portions.portionsCount == 0)) {
           portion = 0;
-        } 
-        else {
+        } else {
           portion = (this.meal.totalNetCost / this.meal.portions.portionsCount).toFixed(2);
           this.meal.portions.portionNetCost = portion;
         }
@@ -244,8 +253,7 @@ export default {
         if ((this.meal.totalGrossCost == "" && this.meal.totalGrossCost == 0) || 
             (this.meal.portions.portionsCount == "" && this.meal.portions.portionsCount == 0)) {
           portion = 0;
-        } 
-        else {
+        } else {
           portion = (this.meal.totalGrossCost / this.meal.portions.portionsCount).toFixed(2);
           this.meal.portions.portionGrossCost = portion;
         }
@@ -255,9 +263,8 @@ export default {
 
       removeItem(id) {
         this.meal.ingredients = this.meal.ingredients.filter(ingredient =>ingredient.id != id)
-      }
+      },
   },
-
 }
 </script>
 
