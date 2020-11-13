@@ -58,7 +58,7 @@
     </div>
     <table class="weight-table">
       <thead>
-        <th>Total weight/Kg:</th>
+        <th>Total meal weight/Kg:</th>
         <th>Portion weight/g:</th>
         <th>Number of servings:</th>
       </thead>
@@ -68,7 +68,7 @@
             type="number" 
             :id="`totalWeight`" 
             placeholder="Edit" 
-            v-model.number="meal.portions.totalWeight" 
+            v-model.number="meal.total.weight" 
             @focus="selectInput($event)"
           >
         </td>
@@ -77,11 +77,11 @@
             type="number" 
             :id="`portionWeight`" 
             placeholder="Edit" 
-            v-model.number="meal.portions.portionWeight" 
+            v-model.number="meal.portion.weight" 
             @focus="selectInput($event)"
           >
         </td>
-        <td>{{calculatePortionsCount(meal.portions.totalWeight, meal.portions.portionWeight)}}</td>
+        <td>{{calculatePortionsCount(meal.total.weight, meal.portion.weight)}}</td>
       </tbody>
     </table>
     <table class="cost-table">
@@ -131,22 +131,27 @@ export default {
             name: "Kielbasa",
             quantity: 1.6,
             price: 20.99,
-            vat: "1",
+            vat:  1,
             gross: 0,
             net: 0,
           },
         ],
-        portions: {
+        portion: {
           totalWeight: 0,
-          portionWeight: 0,
-          portionsCount: 0,
-          portionNetCost: 0,
-          portionGrossCost: 0,
+          weight: 0,
+          count: 0,
+          cost: {
+            net: 0,
+            gross: 0,
+          }
         },
-        totalNetCost: 0,
-        totalGrossCost: 0,
-        totalPortionNetCost: 0,
-        totalportionGrossCost: 0,
+        total: {
+          cost: {
+            net: 0,
+            gross: 0,
+          },
+          weight: 0,
+        },
       },
 
       vatOptions: [
@@ -196,7 +201,7 @@ export default {
           name: this.newIngredientInputValue,
           quantity: 0,
           price: 0,
-          vat: "1",
+          vat: 1,
           gross: 0,
           net: 0,
         };
@@ -210,11 +215,11 @@ export default {
       calculatePortionsCount(totalWeight, portionWeight) {
         let portionCount = 0;
 
-        if (this.meal.portions.totalWeight && this.meal.portions.portionWeight ) {  
+        if (this.meal.total.weight && this.meal.portion.weight ) {  
           portionCount = totalWeight / (portionWeight / 1000);
           portionCount = portionCount < 1 ? 0 : Math.round(portionCount);
 
-          this.meal.portions.portionsCount = portionCount;
+          this.meal.portion.count = portionCount;
         }
 
         return portionCount;
@@ -222,41 +227,34 @@ export default {
 
       calculateTotalCost(costType) {
         let total = 0;
-        let totalCost = costType === 'net' ? this.meal.totalNetCost : this.meal.totalGrossCost;
-
         this.meal.ingredients.forEach(ingredient => {
-          const ingredientType = costType === 'net' ? ingredient.net : ingredient.gross;
-          total += parseFloat(ingredientType);
+          total += parseFloat(ingredient[costType]);
         });
 
         total = parseFloat(total.toFixed(2));
-        totalCost = total;
-        console.log(totalCost === this.meal.totalNetCost);
-        console.log(costType)
+        this.meal.total.cost[costType] = total;
         
-        return totalCost;
+        return total;
       },
 
       calculatePortionCost(costType) {
         let portion = 0;
-        let portionCost = costType === 'net' ? this.meal.portions.portionNetCost : this.meal.portions.portionGrossCost;
-        const totalCost = costType === 'net' ? this.meal.totalNetCost : this.meal.totalGrossCost;
         
-        if (totalCost && this.meal.portions.portionsCount) {
-          portion = (totalCost / this.meal.portions.portionsCount).toFixed(2); 
+        if (this.meal.total.cost[costType] && this.meal.portion.count) {
+          portion = (this.meal.total.cost[costType] / this.meal.portion.count).toFixed(2); 
           
-          portionCost = parseFloat(portion);
+          this.meal.portion.cost[costType] = parseFloat(portion);
         }
 
-        return portionCost;
+        return this.meal.portion.cost[costType];
       },
 
       removeItem(id) {
         this.meal.ingredients = this.meal.ingredients.filter(ingredient =>ingredient.id != id)
       },
 
-      selectInput($event) {
-        $event.target.select();
+      selectInput(event) {
+        event.target.select();
       }
 
   },
