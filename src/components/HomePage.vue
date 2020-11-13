@@ -13,11 +13,15 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Josefin+Sans:400,400i,600,600i');
 
   h1 {
-    color: green;
-    font-weight: 1000;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 60px;
+    margin-bottom: 30px;
+    color: rgb(4, 4, 122);
+    text-decoration: underline lightblue ;
   }
 
 </style>
