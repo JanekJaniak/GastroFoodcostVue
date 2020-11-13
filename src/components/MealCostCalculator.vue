@@ -15,7 +15,7 @@
               placeholder="Edit" 
               v-model.number="meal.ingredients[ingredientIndex].quantity"  
               type="number"
-              onFocus="this.select()"
+              @focus="selectInput($event)"
             />
           </td>
           <td>
@@ -24,7 +24,7 @@
               placeholder="Edit" 
               v-model.number="meal.ingredients[ingredientIndex].price" 
               type="number"
-              onFocus="this.select()"
+              @focus="selectInput($event)"
             />
           </td>
           <td><select v-model="meal.ingredients[ingredientIndex].vat">
@@ -69,7 +69,7 @@
             :id="`totalWeight`" 
             placeholder="Edit" 
             v-model.number="meal.portions.totalWeight" 
-            onFocus="this.select()"
+            @focus="selectInput($event)"
           >
         </td>
         <td>
@@ -78,7 +78,7 @@
             :id="`portionWeight`" 
             placeholder="Edit" 
             v-model.number="meal.portions.portionWeight" 
-            onFocus="this.select()"
+            @focus="selectInput($event)"
           >
         </td>
         <td>{{calculatePortionsCount(meal.portions.totalWeight, meal.portions.portionWeight)}}</td>
@@ -93,13 +93,13 @@
       <tbody>
         <tr>
           <td><strong>Total:</strong></td>
-          <td>{{totalNetCost()}}</td>
-          <td>{{totalGrossCost()}}</td>
+          <td>{{calculateTotalCost('net')}}</td>
+          <td>{{calculateTotalCost('gross')}}</td>
         </tr>
         <tr>
           <td><strong>Per portion:</strong></td>
-          <td>{{portionNetCost()}}</td>
-          <td>{{portionGrossCost()}}</td>
+          <td>{{calculatePortionCost('net')}}</td>
+          <td>{{calculatePortionCost('gross')}}</td>
         </tr>
       </tbody>
     </table>
@@ -220,55 +220,45 @@ export default {
         return portionCount;
       },
 
-      totalNetCost() {
+      calculateTotalCost(costType) {
         let total = 0;
+        let totalCost = costType === 'net' ? this.meal.totalNetCost : this.meal.totalGrossCost;
+
         this.meal.ingredients.forEach(ingredient => {
-          total += parseFloat(ingredient.net);
+          const ingredientType = costType === 'net' ? ingredient.net : ingredient.gross;
+          total += parseFloat(ingredientType);
         });
 
-        total = total.toFixed(2);
-        this.meal.totalNetCost = total;
-      
-        return total;
+        total = parseFloat(total.toFixed(2));
+        totalCost = total;
+        console.log(totalCost === this.meal.totalNetCost);
+        console.log(costType)
+        
+        return totalCost;
       },
 
-      totalGrossCost() {
-        let total = 0;
-        this.meal.ingredients.forEach(ingredient => {
-          total += parseFloat(ingredient.gross);
-        });
-
-        total = total.toFixed(2);
-        this.meal.totalGrossCost = total;
-
-        return total;
-      },
-
-      portionNetCost() {
+      calculatePortionCost(costType) {
         let portion = 0;
-        if (this.meal.totalNetCost && this.meal.portions.portionsCount) {
-          portion = (this.meal.totalNetCost / this.meal.portions.portionsCount).toFixed(2); 
-
-          this.meal.portions.portionNetCost = portion;
+        let portionCost = costType === 'net' ? this.meal.portions.portionNetCost : this.meal.portions.portionGrossCost;
+        const totalCost = costType === 'net' ? this.meal.totalNetCost : this.meal.totalGrossCost;
+        
+        if (totalCost && this.meal.portions.portionsCount) {
+          portion = (totalCost / this.meal.portions.portionsCount).toFixed(2); 
+          
+          portionCost = parseFloat(portion);
         }
 
-        return portion;
-      },
-
-      portionGrossCost() {
-        let portion = 0;
-        if (this.meal.totalGrossCost && this.meal.portions.portionsCount) {
-          portion = (this.meal.totalGrossCost / this.meal.portions.portionsCount).toFixed(2); 
-
-          this.meal.portions.portionGrossCost = portion;
-        }
-
-        return portion;
+        return portionCost;
       },
 
       removeItem(id) {
         this.meal.ingredients = this.meal.ingredients.filter(ingredient =>ingredient.id != id)
       },
+
+      selectInput($event) {
+        $event.target.select();
+      }
+
   },
 }
 </script>
@@ -278,7 +268,7 @@ export default {
 h2 {
   font-family: 'Josefin Sans', sans-serif;
   font-size: 1.8rem;
-   color: rgb(2, 2, 184);
+  color: rgb(2, 2, 184);
 }
 
 h3 {
