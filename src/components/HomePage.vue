@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(class='home')
+  div(class="home")
     h1 {{ msg }}
 </template>
 

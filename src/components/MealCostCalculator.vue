@@ -1,13 +1,18 @@
 <template lang="pug">
+
   div(class="table-container")
+
     h2 Food Cost Calculator
+
     h3 {{meal.name}}
+
     table(class="ingredient-table")
       thead
         th(
           v-for="header in tHeader" 
           :key="header.id"
         ) {{header.name}}
+
       tbody
         tr(
           v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" 
@@ -67,6 +72,7 @@
         class="dim button"
          @click="addIngredient()"
       ) Add new ingredient
+
     table(class="weight-table")
       thead
         th Total meal weight/Kg:
@@ -112,6 +118,7 @@
           td {{calculateTotalCost("net")}}
 
           td {{calculateTotalCost("gross")}}
+          
         tr
           td 
             strong Per portion:
@@ -290,6 +297,7 @@ h3 {
   font-size: 1.5rem;
   font-weight: 700;
 }
+
 th, td {
   border: none;
   border-bottom-style: solid;
@@ -362,6 +370,7 @@ select {
   background-color: red;
   font-weight: 900;
 }
+
 .remove-button:hover {
   background-color: rgb(248, 149, 149);
   font-weight: 900;
