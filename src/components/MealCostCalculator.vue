@@ -1,134 +1,155 @@
-<template>
-  <div class="table-container">
-    <h2>Food Cost Calculator</h2>
-    <h3>{{meal.name}}</h3>
-    <table class="ingredient-table">
-      <thead>
-        <th v-for="header in tHeader" :key="header.id">{{header.name}}</th>
-      </thead>
-      <tbody>
-        <tr v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" :key="id">
-          <td><strong>{{name}}</strong></td>
-          <td>
-            <input 
-              :id="`weight-${ingredientIndex}`" 
-              placeholder="Edit" 
+<template lang="pug">
+  div(class="table-container")
+    h2 Food Cost Calculator
+
+    h3 {{meal.name}}
+
+    table(class="ingredient-table")
+      thead
+        th(
+          v-for="header in tHeader" 
+          :key="header.id"
+        ) {{header.name}}
+
+      tbody
+        tr(
+          v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" 
+          :key="id"
+        )
+          td
+            strong {{name}}
+
+          td
+            input( 
+              :id="`weight-${ingredientIndex}`"
+              placeholder="Edit"
               v-model.number="meal.ingredients[ingredientIndex].quantity"  
               type="number"
               @focus="selectInput($event)"
-            />
-          </td>
-          <td>
-            <input 
+            )
+
+          td
+            input( 
               :id="`price-${ingredientIndex}`" 
               placeholder="Edit" 
               v-model.number="meal.ingredients[ingredientIndex].price" 
               type="number"
               @focus="selectInput($event)"
-            />
-          </td>
-          <td><select v-model="meal.ingredients[ingredientIndex].vat">
-            <option 
-              v-for="option in vatOptions" 
-              :value="option.value" 
-              :key="option.id" 
-              :disabled="option.disabled"
-            >
-              {{option.text}}
-            </option>
-          </select></td>
-          <td>
-            <strong>{{calculateNetValue(quantity, price, ingredientIndex)}}</strong>
-          </td>
-          <td>
-            <strong>{{calculateGrossValue(quantity, price, vat, ingredientIndex)}}</strong>
-          </td>
-          <td class="remove-button-wrapper" @click="removeItem(id)"><button class="remove-button">X</button></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="newIngredient">
-      <input 
+            )
+
+          td
+            select(v-model="meal.ingredients[ingredientIndex].vat")
+              option( 
+                v-for="option in vatOptions" 
+                :value="option.value"
+                :key="option.id"
+                :disabled="option.disabled"
+              ) {{option.text}}
+
+          td
+            strong {{calculateNetValue(quantity, price, ingredientIndex)}}
+
+          td
+            strong {{calculateGrossValue(quantity, price, vat, ingredientIndex)}}
+
+          td(class="remove-button-wrapper")
+            button(
+              class="remove-button" 
+              @click="removeItem(id)"
+            ) X
+
+    div(class="newIngredient")
+      input( 
         placeholder="Ingredient name" 
         @keypress.enter="addIngredient()"  
         @input="handleInput" 
         :value="newIngredientInputValue"
-      >
-      <button class="dim button" @click="addIngredient()">Add new ingredient</button>
-    </div>
-    <table class="weight-table">
-      <thead>
-        <th>Total meal weight/Kg:</th>
-        <th>Portion weight/g:</th>
-        <th>Number of servings:</th>
-      </thead>
-      <tbody>
-        <td>
-          <input 
+      )
+
+      button(
+        class="dim button"
+         @click="addIngredient()"
+      ) Add new ingredient
+
+    table(class="weight-table")
+      thead
+        th Total meal weight/Kg:
+
+        th Portion weight/g:
+
+        th Number of servings:
+
+      tbody
+        td
+          input( 
             type="number" 
-            :id="`totalWeight`" 
-            placeholder="Edit" 
+            :id="`totalWeight`"
+            placeholder="Edit"
             v-model.number="meal.total.weight" 
             @focus="selectInput($event)"
-          >
-        </td>
-        <td>
-          <input 
+          )
+
+        td
+          input( 
             type="number" 
             :id="`portionWeight`" 
             placeholder="Edit" 
             v-model.number="meal.portion.weight" 
             @focus="selectInput($event)"
-          >
-        </td>
-        <td>{{calculatePortionsCount(meal.total.weight, meal.portion.weight)}}</td>
-      </tbody>
-    </table>
-    <table class="cost-table">
-      <thead>
-        <th></th>
-        <th>Net cost:</th>
-        <th>Gross cost:</th>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Total:</strong></td>
-          <td>{{calculateTotalCost('net')}}</td>
-          <td>{{calculateTotalCost('gross')}}</td>
-        </tr>
-        <tr>
-          <td><strong>Per portion:</strong></td>
-          <td>{{calculatePortionCost('net')}}</td>
-          <td>{{calculatePortionCost('gross')}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <button class="dim button">SAVE</button>
-  </div>
+          )
+
+        td {{calculatePortionsCount(meal.total.weight, meal.portion.weight)}}
+
+    table(class="cost-table")
+      thead
+        th 
+
+        th Net cost:
+
+        th Gross cost:
+
+      tbody
+        tr
+          td
+            strong Total:
+
+          td {{calculateTotalCost('net')}}
+
+          td {{calculateTotalCost('gross')}}
+          
+        tr
+          td 
+            strong Per portion:
+
+          td {{calculatePortionCost('net')}}
+
+          td {{calculatePortionCost('gross')}}
+
+    button(class="dim button") SAVE
 </template>
 
 <script>
 import { uuid } from 'vue-uuid'; 
 export default {
-  name: "MealCostCalculator",
+  name: 'MealCostCalculator',
    data() {
     return {
       meal: {
-        name: "Bigos",
+        name: 'Bigos',
         id: 1,
         ingredients: [
           {
             id: 1,
-            name: "Lopatka",
+            name: 'Lopatka',
             quantity : 4.1,
             price: 10.45,
-            vat: "1", 
+            vat: '1', 
             gross: 0,
             net: 0,
           },
           {
             id: 2,
-            name: "Kielbasa",
+            name: 'Kielbasa',
             quantity: 1.6,
             price: 20.99,
             vat:  1,
@@ -155,21 +176,21 @@ export default {
       },
 
       vatOptions: [
-        { text: "Select Vat", value: 1, disabled: true},
-        { text: "5", value: 1.05},
-        { text: "8", value: 1.08},
-        { text: "23", value: 1.23}      
+        { text: 'Select Vat', value: 1, disabled: true},
+        { text: '5', value: 1.05},
+        { text: '8', value: 1.08},
+        { text: '23', value: 1.23}      
       ],
 
-      newIngredientInputValue: "",
+      newIngredientInputValue: '',
 
       tHeader: [
-        {id: 1, name: "Ingredient"}, 
-        {id: 2, name: "Price"}, 
-        {id: 3, name: "Weight/kg"}, 
-        {id: 4, name: "VAT"}, 
-        {id: 5, name: "Net value"}, 
-        {id: 6, name: "Gross value"} 
+        {id: 1, name: 'Ingredient'}, 
+        {id: 2, name: 'Price'}, 
+        {id: 3, name: 'Weight/kg'}, 
+        {id: 4, name: 'VAT'}, 
+        {id: 5, name: 'Net value'}, 
+        {id: 6, name: 'Gross value'} 
       ],
     }
   },
@@ -208,7 +229,7 @@ export default {
 
         if(this.newIngredientInputValue) {
           this.meal.ingredients.push(newIngredient);
-          this.newIngredientInputValue = "";
+          this.newIngredientInputValue = '';
         }
       },
 
@@ -274,6 +295,7 @@ h3 {
   font-size: 1.5rem;
   font-weight: 700;
 }
+
 th, td {
   border: none;
   border-bottom-style: solid;
@@ -346,6 +368,7 @@ select {
   background-color: red;
   font-weight: 900;
 }
+
 .remove-button:hover {
   background-color: rgb(248, 149, 149);
   font-weight: 900;

@@ -1,7 +1,6 @@
-<template>
-  <div class="home">
-    <h1>{{ msg }}</h1>
-  </div>
+<template lang="pug">
+  div(class="home")
+    h1 {{ msg }}
 </template>
 
 <script>
