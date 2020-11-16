@@ -1,99 +1,130 @@
 <template lang="pug">
-  div(class='table-container')
+  div(class="table-container")
     h2 Food Cost Calculator
     h3 {{meal.name}}
-    table(class='ingredient-table')
+    table(class="ingredient-table")
       thead
         th(
-          v-for='header in tHeader' 
-          :key='header.id'
+          v-for="header in tHeader" 
+          :key="header.id"
         ) {{header.name}}
       tbody
-        tr(v-for='({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients' :key='id')
+        tr(
+          v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" 
+          :key="id"
+          )
           td
             strong {{name}}
+
           td
             input( 
-              :id='`weight-${ingredientIndex}`'
-              placeholder='Edit'
-              v-model.number='meal.ingredients[ingredientIndex].quantity'  
-              type='number'
-              @focus='selectInput($event)'
+              :id="`weight-${ingredientIndex}`"
+              placeholder="Edit"
+              v-model.number="meal.ingredients[ingredientIndex].quantity"  
+              type="number"
+              @focus="selectInput($event)"
             )
+
           td
             input( 
-              :id='`price-${ingredientIndex}`' 
-              placeholder='Edit' 
-              v-model.number='meal.ingredients[ingredientIndex].price' 
-              type='number'
-              @focus='selectInput($event)'
+              :id="`price-${ingredientIndex}`" 
+              placeholder="Edit" 
+              v-model.number="meal.ingredients[ingredientIndex].price" 
+              type="number"
+              @focus="selectInput($event)"
             )
+
           td
-            select(v-model='meal.ingredients[ingredientIndex].vat')
+            select(v-model="meal.ingredients[ingredientIndex].vat")
               option( 
-                v-for='option in vatOptions' 
-                :value='option.value'
-                :key='option.id'
-                :disabled='option.disabled'
+                v-for="option in vatOptions" 
+                :value="option.value"
+                :key="option.id"
+                :disabled="option.disabled"
               ) {{option.text}}
+
           td
             strong {{calculateNetValue(quantity, price, ingredientIndex)}}
+
           td
             strong {{calculateGrossValue(quantity, price, vat, ingredientIndex)}}
-          td(class='remove-button-wrapper')
-            button(class='remove-button' @click='removeItem(id)') X
-    div(class='newIngredient')
+
+          td(class="remove-button-wrapper")
+            button(
+              class="remove-button" 
+              @click="removeItem(id)"
+            ) X
+
+    div(class="newIngredient")
       input( 
-        placeholder='Ingredient name' 
-        @keypress.enter='addIngredient()'  
-        @input='handleInput' 
-        :value='newIngredientInputValue'
+        placeholder="Ingredient name" 
+        @keypress.enter="addIngredient()"  
+        @input="handleInput" 
+        :value="newIngredientInputValue"
       )
-      button(class='dim button' @click='addIngredient()') Add new ingredient
-    table(class='weight-table')
+
+      button(
+        class="dim button"
+         @click="addIngredient()"
+      ) Add new ingredient
+    table(class="weight-table")
       thead
         th Total meal weight/Kg:
+
         th Portion weight/g:
+
         th Number of servings:
+
       tbody
         td
           input( 
-            type='number' 
-            :id='`totalWeight`'
-            placeholder='Edit'
-            v-model.number='meal.total.weight' 
-            @focus='selectInput($event)'
+            type="number" 
+            :id="`totalWeight`"
+            placeholder="Edit"
+            v-model.number="meal.total.weight" 
+            @focus="selectInput($event)"
           )
+
         td
           input( 
-            type='number' 
-            :id='`portionWeight`' 
-            placeholder='Edit' 
-            v-model.number='meal.portion.weight' 
-            @focus='selectInput($event)'
+            type="number" 
+            :id="`portionWeight`" 
+            placeholder="Edit" 
+            v-model.number="meal.portion.weight" 
+            @focus="selectInput($event)"
           )
+
         td {{calculatePortionsCount(meal.total.weight, meal.portion.weight)}}
-    table(class='cost-table')
+
+    table(class="cost-table")
       thead
         th 
+
         th Net cost:
+
         th Gross cost:
+
       tbody
         tr
           td
             strong Total:
-          td {{calculateTotalCost('net')}}
-          td {{calculateTotalCost('gross')}}
+
+          td {{calculateTotalCost("net")}}
+
+          td {{calculateTotalCost("gross")}}
         tr
           td 
             strong Per portion:
-          td {{calculatePortionCost('net')}}
-          td {{calculatePortionCost('gross')}}
-    button(class='dim button') SAVE
+
+          td {{calculatePortionCost("net")}}
+
+          td {{calculatePortionCost("gross")}}
+
+    button(class="dim button") SAVE
 </template>
 
 <script>
-import { uuid } from 'vue-uuid'; 
+import { uuid } from "vue-uuid"; 
 export default {
   name: "MealCostCalculator",
    data() {
