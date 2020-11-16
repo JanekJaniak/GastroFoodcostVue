@@ -1,7 +1,5 @@
 <template lang="pug">
-
   div(class="table-container")
-
     h2 Food Cost Calculator
 
     h3 {{meal.name}}
@@ -17,7 +15,7 @@
         tr(
           v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" 
           :key="id"
-          )
+        )
           td
             strong {{name}}
 
@@ -115,43 +113,43 @@
           td
             strong Total:
 
-          td {{calculateTotalCost("net")}}
+          td {{calculateTotalCost('net')}}
 
-          td {{calculateTotalCost("gross")}}
+          td {{calculateTotalCost('gross')}}
           
         tr
           td 
             strong Per portion:
 
-          td {{calculatePortionCost("net")}}
+          td {{calculatePortionCost('net')}}
 
-          td {{calculatePortionCost("gross")}}
+          td {{calculatePortionCost('gross')}}
 
     button(class="dim button") SAVE
 </template>
 
 <script>
-import { uuid } from "vue-uuid"; 
+import { uuid } from 'vue-uuid'; 
 export default {
-  name: "MealCostCalculator",
+  name: 'MealCostCalculator',
    data() {
     return {
       meal: {
-        name: "Bigos",
+        name: 'Bigos',
         id: 1,
         ingredients: [
           {
             id: 1,
-            name: "Lopatka",
+            name: 'Lopatka',
             quantity : 4.1,
             price: 10.45,
-            vat: "1", 
+            vat: '1', 
             gross: 0,
             net: 0,
           },
           {
             id: 2,
-            name: "Kielbasa",
+            name: 'Kielbasa',
             quantity: 1.6,
             price: 20.99,
             vat:  1,
@@ -178,21 +176,21 @@ export default {
       },
 
       vatOptions: [
-        { text: "Select Vat", value: 1, disabled: true},
-        { text: "5", value: 1.05},
-        { text: "8", value: 1.08},
-        { text: "23", value: 1.23}      
+        { text: 'Select Vat', value: 1, disabled: true},
+        { text: '5', value: 1.05},
+        { text: '8', value: 1.08},
+        { text: '23', value: 1.23}      
       ],
 
-      newIngredientInputValue: "",
+      newIngredientInputValue: '',
 
       tHeader: [
-        {id: 1, name: "Ingredient"}, 
-        {id: 2, name: "Price"}, 
-        {id: 3, name: "Weight/kg"}, 
-        {id: 4, name: "VAT"}, 
-        {id: 5, name: "Net value"}, 
-        {id: 6, name: "Gross value"} 
+        {id: 1, name: 'Ingredient'}, 
+        {id: 2, name: 'Price'}, 
+        {id: 3, name: 'Weight/kg'}, 
+        {id: 4, name: 'VAT'}, 
+        {id: 5, name: 'Net value'}, 
+        {id: 6, name: 'Gross value'} 
       ],
     }
   },
@@ -231,7 +229,7 @@ export default {
 
         if(this.newIngredientInputValue) {
           this.meal.ingredients.push(newIngredient);
-          this.newIngredientInputValue = "";
+          this.newIngredientInputValue = '';
         }
       },
 
