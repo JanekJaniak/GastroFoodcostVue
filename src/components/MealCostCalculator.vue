@@ -1,110 +1,95 @@
-<template>
-  <div class="table-container">
-    <h2>Food Cost Calculator</h2>
-    <h3>{{meal.name}}</h3>
-    <table class="ingredient-table">
-      <thead>
-        <th v-for="header in tHeader" :key="header.id">{{header.name}}</th>
-      </thead>
-      <tbody>
-        <tr v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" :key="id">
-          <td><strong>{{name}}</strong></td>
-          <td>
-            <input 
-              :id="`weight-${ingredientIndex}`" 
-              placeholder="Edit" 
-              v-model.number="meal.ingredients[ingredientIndex].quantity"  
-              type="number"
-              @focus="selectInput($event)"
-            />
-          </td>
-          <td>
-            <input 
-              :id="`price-${ingredientIndex}`" 
-              placeholder="Edit" 
-              v-model.number="meal.ingredients[ingredientIndex].price" 
-              type="number"
-              @focus="selectInput($event)"
-            />
-          </td>
-          <td><select v-model="meal.ingredients[ingredientIndex].vat">
-            <option 
-              v-for="option in vatOptions" 
-              :value="option.value" 
-              :key="option.id" 
-              :disabled="option.disabled"
-            >
-              {{option.text}}
-            </option>
-          </select></td>
-          <td>
-            <strong>{{calculateNetValue(quantity, price, ingredientIndex)}}</strong>
-          </td>
-          <td>
-            <strong>{{calculateGrossValue(quantity, price, vat, ingredientIndex)}}</strong>
-          </td>
-          <td class="remove-button-wrapper" @click="removeItem(id)"><button class="remove-button">X</button></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="newIngredient">
-      <input 
-        placeholder="Ingredient name" 
-        @keypress.enter="addIngredient()"  
-        @input="handleInput" 
-        :value="newIngredientInputValue"
-      >
-      <button class="dim button" @click="addIngredient()">Add new ingredient</button>
-    </div>
-    <table class="weight-table">
-      <thead>
-        <th>Total meal weight/Kg:</th>
-        <th>Portion weight/g:</th>
-        <th>Number of servings:</th>
-      </thead>
-      <tbody>
-        <td>
-          <input 
-            type="number" 
-            :id="`totalWeight`" 
-            placeholder="Edit" 
-            v-model.number="meal.total.weight" 
-            @focus="selectInput($event)"
-          >
-        </td>
-        <td>
-          <input 
-            type="number" 
-            :id="`portionWeight`" 
-            placeholder="Edit" 
-            v-model.number="meal.portion.weight" 
-            @focus="selectInput($event)"
-          >
-        </td>
-        <td>{{calculatePortionsCount(meal.total.weight, meal.portion.weight)}}</td>
-      </tbody>
-    </table>
-    <table class="cost-table">
-      <thead>
-        <th></th>
-        <th>Net cost:</th>
-        <th>Gross cost:</th>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Total:</strong></td>
-          <td>{{calculateTotalCost('net')}}</td>
-          <td>{{calculateTotalCost('gross')}}</td>
-        </tr>
-        <tr>
-          <td><strong>Per portion:</strong></td>
-          <td>{{calculatePortionCost('net')}}</td>
-          <td>{{calculatePortionCost('gross')}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <button class="dim button">SAVE</button>
-  </div>
+<template lang="pug">
+  div(class='table-container')
+    h2 Food Cost Calculator
+    h3 {{meal.name}}
+    table(class='ingredient-table')
+      thead
+        th(
+          v-for='header in tHeader' 
+          :key='header.id'
+        ) {{header.name}}
+      tbody
+        tr(v-for='({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients' :key='id')
+          td
+            strong {{name}}
+          td
+            input( 
+              :id='`weight-${ingredientIndex}`'
+              placeholder='Edit'
+              v-model.number='meal.ingredients[ingredientIndex].quantity'  
+              type='number'
+              @focus='selectInput($event)'
+            )
+          td
+            input( 
+              :id='`price-${ingredientIndex}`' 
+              placeholder='Edit' 
+              v-model.number='meal.ingredients[ingredientIndex].price' 
+              type='number'
+              @focus='selectInput($event)'
+            )
+          td
+            select(v-model='meal.ingredients[ingredientIndex].vat')
+              option( 
+                v-for='option in vatOptions' 
+                :value='option.value'
+                :key='option.id'
+                :disabled='option.disabled'
+              ) {{option.text}}
+          td
+            strong {{calculateNetValue(quantity, price, ingredientIndex)}}
+          td
+            strong {{calculateGrossValue(quantity, price, vat, ingredientIndex)}}
+          td(class='remove-button-wrapper')
+            button(class='remove-button' @click='removeItem(id)') X
+    div(class='newIngredient')
+      input( 
+        placeholder='Ingredient name' 
+        @keypress.enter='addIngredient()'  
+        @input='handleInput' 
+        :value='newIngredientInputValue'
+      )
+      button(class='dim button' @click='addIngredient()') Add new ingredient
+    table(class='weight-table')
+      thead
+        th Total meal weight/Kg:
+        th Portion weight/g:
+        th Number of servings:
+      tbody
+        td
+          input( 
+            type='number' 
+            :id='`totalWeight`'
+            placeholder='Edit'
+            v-model.number='meal.total.weight' 
+            @focus='selectInput($event)'
+          )
+        td
+          input( 
+            type='number' 
+            :id='`portionWeight`' 
+            placeholder='Edit' 
+            v-model.number='meal.portion.weight' 
+            @focus='selectInput($event)'
+          )
+        td {{calculatePortionsCount(meal.total.weight, meal.portion.weight)}}
+    table(class='cost-table')
+      thead
+        th 
+        th Net cost:
+        th Gross cost:
+      tbody
+        tr
+          td
+            strong Total:
+          td {{calculateTotalCost('net')}}
+          td {{calculateTotalCost('gross')}}
+        tr
+          td 
+            strong Per portion:
+          td {{calculatePortionCost('net')}}
+          td {{calculatePortionCost('gross')}}
+    button(class='dim button') SAVE
 </template>
 
 <script>
