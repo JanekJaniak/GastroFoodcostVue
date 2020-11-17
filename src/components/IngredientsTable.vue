@@ -12,22 +12,22 @@
         :key="id"
       )
         td.table__inner
-          strong {{name}}
+          strong name
 
         td.table__inner
           input.input( 
-            :id="`weight-${ingredientIndex}`"
             placeholder="Edit"
-            v-model.number="ingredients[ingredientIndex].quantity"  
+            :value="value"
+            @input=""  
             type="number"
             @focus="selectInput($event)"
           )
 
         td.table__inner
           input.input( 
-            :id="`price-${ingredientIndex}`" 
             placeholder="Edit" 
-            v-model.number="ingredients[ingredientIndex].price" 
+            :value="value"
+            @input="" 
             type="number"
             @focus="selectInput($event)"
           )
@@ -42,25 +42,25 @@
             ) {{option.text}}
 
         td.table__inner
-          strong {{calculateNetValue(quantity, price, ingredientIndex)}}
+          strong calculateNetValue
 
         td.table__inner
-          strong {{calculateGrossValue(quantity, price, vat, ingredientIndex)}}
+          strong calculateGrossValue
 
         td.table__inner.table__inner-no_border
           button.button.button-remove(
-            @click="removeItem(id)"
+            @click=""
           ) X
 
-  div.new__ingredient
-    input.input( 
-      placeholder="Ingredient name" 
-      @keypress.enter="addIngredient()"  
-      @input="handleInput" 
-      :value="newIngredientInputValue"
-    )
+    div.new__ingredient
+      input.input( 
+        placeholder="Ingredient name" 
+        @keypress.enter=""  
+        @input="" 
+        :value="value"
+      )
 
-    button.button.button-dim(@click="addIngredient()") Add new ingredient
+    button.button.button-dim(@click="") Add new ingredient
 </template>  
 
 <script>
@@ -79,6 +79,9 @@
     },
 
     methods: {
+      selectInput(event) {
+        event.target.select();
+      }
       
     },
     

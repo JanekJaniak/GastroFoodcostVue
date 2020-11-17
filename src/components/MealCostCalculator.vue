@@ -222,6 +222,7 @@ export default {
 
   components: {
     'ingredients-table': IngredientsTable
+  }
 
 }
 </script>
