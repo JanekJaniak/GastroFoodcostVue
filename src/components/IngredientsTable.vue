@@ -18,9 +18,8 @@
           td.table__inner
             input.input( 
               placeholder="Edit"
-              :value="value"
-              :id="`price-${id}`" 
-              @input="handleInput"  
+              :value="price"
+              @input="handleInput($event, ingredientIndex, 'price')"  
               type="number"
               @focus="selectInput($event)"
             )
@@ -28,9 +27,8 @@
           td.table__inner
             input.input( 
               placeholder="Edit" 
-              :value="value"
-              :id="`weight-${id}`"
-              @input="handleInput" 
+              :value="quantity"
+              @input="handleInput($event, ingredientIndex, 'quantity')" 
               type="number"
               @focus="selectInput($event)"
             )
@@ -42,6 +40,7 @@
                 :value="option.value"
                 :key="option.id"
                 :disabled="option.disabled"
+                @select="handleSelect($event, ingredientIndex)"
               ) {{option.text}}
 
           td.table__inner
@@ -87,11 +86,14 @@
         event.target.select();
       },
 
-      handleInput(event) {
-        this.value = event.target.value
-        console.log(this.value);
-        console.log(event.target.id);
+      handleInput(event, index, field) {
+        this.$emit('inputChange',{value:event.target.value, index, field})
       },
+
+      handleSelect(event, index) {
+        this.$emit('vatChange',{value:event.target.value, index})
+      },
+
 
     },
     

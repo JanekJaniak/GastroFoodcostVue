@@ -8,6 +8,8 @@
       :ingredients="meal.ingredients"
       :vatOptions="vatOptions",
       :tHeader="tHeader"
+      @inputChange="updateInputValue"
+      @vatChange="updateVat"
     )
 
     table.table-calculate
@@ -216,6 +218,14 @@ export default {
 
       selectInput(event) {
         event.target.select();
+      },
+
+      updateInputValue({value, index, field}) {
+        this.meal.ingredients[index][field] = parseFloat(value);
+      },
+
+      updateVat ({value, index}) { 
+        this.meal.ingredients[index].vat = value
       }
 
   },
