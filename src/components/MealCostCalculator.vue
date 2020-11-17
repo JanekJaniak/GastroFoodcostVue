@@ -1,26 +1,26 @@
 <template lang="pug">
-  div(class="table-container")
-    h2 Food Cost Calculator
+  div.meal_cost_calculator
+    h1.heading-primary Food Cost Calculator
 
-    h3 {{meal.name}}
+    h2.heading-secondary {{meal.name}}
 
-    table(class="ingredient-table")
+    table.table
       thead
-        th(
+        th.table__inner(
           v-for="header in tHeader" 
           :key="header.id"
         ) {{header.name}}
 
       tbody
-        tr(
+        tr.table__tr(
           v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" 
           :key="id"
         )
-          td
+          td.table__inner
             strong {{name}}
 
-          td
-            input( 
+          td.table__inner
+            input.input( 
               :id="`weight-${ingredientIndex}`"
               placeholder="Edit"
               v-model.number="meal.ingredients[ingredientIndex].quantity"  
@@ -28,8 +28,8 @@
               @focus="selectInput($event)"
             )
 
-          td
-            input( 
+          td.table__inner
+            input.input( 
               :id="`price-${ingredientIndex}`" 
               placeholder="Edit" 
               v-model.number="meal.ingredients[ingredientIndex].price" 
@@ -37,7 +37,7 @@
               @focus="selectInput($event)"
             )
 
-          td
+          td.table__inner
             select(v-model="meal.ingredients[ingredientIndex].vat")
               option( 
                 v-for="option in vatOptions" 
@@ -46,42 +46,38 @@
                 :disabled="option.disabled"
               ) {{option.text}}
 
-          td
+          td.table__inner
             strong {{calculateNetValue(quantity, price, ingredientIndex)}}
 
-          td
+          td.table__inner
             strong {{calculateGrossValue(quantity, price, vat, ingredientIndex)}}
 
-          td(class="remove-button-wrapper")
-            button(
-              class="remove-button" 
+          td.table__inner.table__inner-no_border
+            button.button.button-remove(
               @click="removeItem(id)"
             ) X
 
-    div(class="newIngredient")
-      input( 
+    div.new__ingredient
+      input.input( 
         placeholder="Ingredient name" 
         @keypress.enter="addIngredient()"  
         @input="handleInput" 
         :value="newIngredientInputValue"
       )
 
-      button(
-        class="dim button"
-         @click="addIngredient()"
-      ) Add new ingredient
+      button.button.button-dim(@click="addIngredient()") Add new ingredient
 
-    table(class="weight-table")
+    table.table-calculate
       thead
-        th Total meal weight/Kg:
+        th.table__inner Total meal weight/Kg:
 
-        th Portion weight/g:
+        th.table__inner Portion weight/g:
 
-        th Number of servings:
+        th.table__inner Number of servings:
 
       tbody
-        td
-          input( 
+        td.table__inner
+          input.input( 
             type="number" 
             :id="`totalWeight`"
             placeholder="Edit"
@@ -89,8 +85,8 @@
             @focus="selectInput($event)"
           )
 
-        td
-          input( 
+        td.table__inner
+          input.input( 
             type="number" 
             :id="`portionWeight`" 
             placeholder="Edit" 
@@ -98,34 +94,34 @@
             @focus="selectInput($event)"
           )
 
-        td {{calculatePortionsCount(meal.total.weight, meal.portion.weight)}}
+        td.table__inner {{calculatePortionsCount(meal.total.weight, meal.portion.weight)}}
 
-    table(class="cost-table")
+    table.table-calculate
       thead
-        th 
+        th.table__inner 
 
-        th Net cost:
+        th.table__inner Net cost:
 
-        th Gross cost:
+        th.table__inner Gross cost:
 
       tbody
         tr
-          td
+          td.table__inner
             strong Total:
 
-          td {{calculateTotalCost('net')}}
+          td.table__inner {{calculateTotalCost('net')}}
 
-          td {{calculateTotalCost('gross')}}
+          td.table__inner {{calculateTotalCost('gross')}}
           
         tr
-          td 
+          td.table__inner 
             strong Per portion:
 
-          td {{calculatePortionCost('net')}}
+          td.table__inner {{calculatePortionCost('net')}}
 
-          td {{calculatePortionCost('gross')}}
+          td.table__inner {{calculatePortionCost('gross')}}
 
-    button(class="dim button") SAVE
+    button.button.button-dim SAVE
 </template>
 
 <script>
@@ -282,107 +278,10 @@ export default {
 }
 </script>
 
-<style>
-
-h2 {
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 1.8rem;
-  color: rgb(2, 2, 184);
-}
-
-h3 {
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-th, td {
-  border: none;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  padding-bottom: 0.5rem;
-}
-
-input {
-  border-style: solid;
-  border-width: 1px;
-  background-color: rgb(245, 245, 245);
-  padding: 0.2rem;
-  font-weight: 700;
-}
-
-input:focus {
-  outline-color:  rgb(76, 76, 250);
-}
-
-select {
-   background-color: rgb(245, 245, 245);
-}
-
-.cost-table, .weight-table {
-  border: none;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  margin: 1rem;
-  margin-left: auto; 
-  margin-right: 0;
-}
-
-.ingredient-table {
-  width: 100%;
-  border: none;
-}
-
-.table-container {
-  margin: 0 auto;
-  width: 80vw;
-  max-width: 1000px;
-  position: relative;
-}
-
-.dim:hover {
-  background-color: rgb(4, 4, 122);
-  border-color: black;
-  transition: .5s ease-in;
-}
-
-.dim:active {
-  color: black;
-  background-color: rgb(188, 207, 248);
-  border-color: rgb(76, 76, 250);
-  transition:.2s ease-out;
-}
-
-.button {
-  margin: 1rem;;
-  font-size: .6rem;
-  padding: 0.3rem 0.8rem 0.3rem 0.8rem;
-  border-width: 0.2rem;
-  border-color: rgb(98, 98, 241);
-  background-color: rgb(58, 58, 241);
-  color: white;
-  font-weight: 700;
-}
-
-.remove-button {
-  background-color: red;
-  font-weight: 900;
-}
-
-.remove-button:hover {
-  background-color: rgb(248, 149, 149);
-  font-weight: 900;
-  transition: .3s ease-in;
-}
-
-.remove-button:active {
-  background-color: red;
-  font-weight: 900;
-  color: white;
-}
-
-.remove-button-wrapper {
-  border: none;
-}
-
+<style lang="sass">
+.meal_cost_calculator
+  margin: 0 auto
+  width: 80vw
+  max-width: 1000px
+  position: relative
 </style>
