@@ -10,7 +10,10 @@
       :tHeader="tHeader"
       @inputChange="updateInputValue"
       @vatChange="updateVat"
-      @grossValueChange="updateGrossValue"
+      @changeNetValue="updateNetValue"
+      @changeGrossValue="updateGrossValue"
+      @removeAction="removeItem"
+      @newItem="addIngredient"
     )
 
     table.table-calculate
@@ -139,103 +142,89 @@ export default {
   },
   
   methods: {
-      calculateNetValue(quantity, price, ingredientIndex) {
-        const netValue = (quantity * price).toFixed(2);
-        this.meal.ingredients[ingredientIndex].net = netValue
-
-        return netValue;
-      },
-
-      calculateGrossValue(quantity, price, vat, ingredientIndex) {
-        const grossValue = (quantity * price * vat).toFixed(2);
-        this.meal.ingredients[ingredientIndex].gross = grossValue;
-
-        return grossValue;
-      },
-
-      handleInput(event) {
-        this.newIngredientInputValue = event.target.value;
-      },
-
-      addIngredient() {
-        const newID = uuid.v4();
-
-        const newIngredient = {
-          id: newID,
-          name: this.newIngredientInputValue,
-          quantity: 0,
-          price: 0,
-          vat: 1,
-          gross: 0,
-          net: 0,
-        };
-
-        if(this.newIngredientInputValue) {
-          this.meal.ingredients.push(newIngredient);
-          this.newIngredientInputValue = '';
-        }
-      },
-
-      calculatePortionsCount(totalWeight, portionWeight) {
-        let portionCount = 0;
-
-        if (this.meal.total.weight && this.meal.portion.weight ) {  
-          portionCount = totalWeight / (portionWeight / 1000);
-          portionCount = portionCount < 1 ? 0 : Math.round(portionCount);
-
-          this.meal.portion.count = portionCount;
-        }
-
-        return portionCount;
-      },
-
-      calculateTotalCost(costType) {
-        let total = 0;
-        this.meal.ingredients.forEach(ingredient => {
-          total += parseFloat(ingredient[costType]);
-        });
-
-        total = parseFloat(total.toFixed(2));
-        this.meal.total.cost[costType] = total;
-        
-        return total;
-      },
-
-      calculatePortionCost(costType) {
-        let portion = 0;
-        
-        if (this.meal.total.cost[costType] && this.meal.portion.count) {
-          portion = (this.meal.total.cost[costType] / this.meal.portion.count).toFixed(2); 
-          
-          this.meal.portion.cost[costType] = parseFloat(portion);
-        }
-
-        return this.meal.portion.cost[costType];
-      },
-
-      removeItem(id) {
-        this.meal.ingredients = this.meal.ingredients.filter(ingredient =>ingredient.id != id)
-      },
-
-      selectInput(event) {
-        event.target.select();
-      },
-
-      updateInputValue({value, index, field}) {
+    updateInputValue({value, index, field}) {
+      if(value) {
         this.meal.ingredients[index][field] = parseFloat(value);
-      },
+      }
+    },
 
-      updateVat ({value, index}) { 
-        this.meal.ingredients[index].vat = value
-      },
+    updateVat ({value, index}) { 
+      this.meal.ingredients[index].vat = value
+    },
 
+    updateNetValue ({value, index}) {
+      this.meal.ingredients[index].net = value
+    },
 
+    updateGrossValue ({value, index}) {
+      this.meal.ingredients[index].gross = value
+    },
+
+    removeItem(id) {
+      this.meal.ingredients = this.meal.ingredients.filter(ingredient =>ingredient.id != id)
+    },
+    
+    addIngredient(value) {
+      const newID = uuid.v4();
+      const newIngredient = {
+        id: newID,
+        name: value,
+        quantity: 0,
+        price: 0,
+        vat: 1,
+        gross: 0,
+        net: 0,
+      };
+
+      this.meal.ingredients.push(newIngredient);
+    },
+
+    calculatePortionsCount(totalWeight, portionWeight) {
+      let portionCount = 0;
+
+      if (this.meal.total.weight && this.meal.portion.weight ) {  
+        portionCount = totalWeight / (portionWeight / 1000);
+        portionCount = portionCount < 1 ? 0 : Math.round(portionCount);
+
+        this.meal.portion.count = portionCount;
+      }
+
+      return portionCount;
+    },
+
+    calculateTotalCost(costType) {
+      let total = 0;
+      this.meal.ingredients.forEach(ingredient => {
+        total += parseFloat(ingredient[costType]);
+      });
+
+      total = parseFloat(total.toFixed(2));
+
+      this.meal.total.cost[costType] = total;
+      
+      return total;
+    },
+
+    calculatePortionCost(costType) {
+      let portion = 0;
+      
+      if (this.meal.total.cost[costType] && this.meal.portion.count) {
+        portion = (this.meal.total.cost[costType] / this.meal.portion.count).toFixed(2); 
+        
+        this.meal.portion.cost[costType] = parseFloat(portion);
+      }
+
+      return this.meal.portion.cost[costType];
+    },
+
+    selectInput(event) {
+      event.target.select();
+    },
   },
 
   components: {
     'ingredients-table': IngredientsTable
   }
-
 }
 </script>
 

@@ -19,7 +19,7 @@
             input.input( 
               placeholder="Edit"
               :value="price"
-              @input="handleInput($event, ingredientIndex, 'price')"  
+              @input="handleInput($event, ingredientIndex, 'price')"
               type="number"
               @focus="selectInput($event)"
             )
@@ -47,11 +47,11 @@
             strong {{ calculateNetValue(quantity, price, ingredientIndex) }}
 
           td.table__inner
-            strong {{calculateGrossValue(quantity, price, vat, ingredientIndex)}}
+            strong {{ calculateGrossValue(quantity, price, vat, ingredientIndex) }}
 
           td.table__inner.table__inner-no_border
             button.button.button-remove(
-              @click=""
+              @click="handleRemoveButton(id)"
             ) X
 
     div.new__ingredient
@@ -59,10 +59,10 @@
         placeholder="Ingredient name" 
         @keypress.enter=""
         :value="value"
-        @input="" 
+        @input="handleNewIngredientInput" 
       )
 
-      button.button.button-dim(@click="") Add new ingredient
+      button.button.button-dim(@click="handleNewIngredientButton") Add new ingredient
 </template>  
 
 <script>
@@ -81,10 +81,6 @@
     },
 
     methods: {
-      selectInput(event) {
-        event.target.select();
-      },
-
       handleInput(event, index, field) {
         this.$emit('inputChange',{value:event.target.value, index, field})
       },
@@ -93,18 +89,42 @@
         this.$emit('vatChange',{value:event.target.value, index})
       },
 
-      calculateNetValue(quantity, price , index) {
-        const netValue = (quantity * price).toFixed(2)
-        console.log(index);
-        return netValue
+      calculateNetValue(quantity, price, index) {
+        const netValue = (quantity * price).toFixed(2);
+        
+        this.$emit('changeNetValue', {value:netValue, index})
+
+        return netValue;
       },
 
       calculateGrossValue(quantity, price, vat, index) {
-        const grossValue = (quantity * price * vat).toFixed(2)
-        console.log(index);
-        return grossValue
+        const grossValue = (quantity * price * vat).toFixed(2);
+
+        this.$emit('changeGrossValue', {value:grossValue, index})
+
+        return grossValue;
+      },
+
+      handleRemoveButton(id) {
+        this.$emit('removeAction', id)
+      },
+
+      handleNewIngredientInput(event) {
+        this.value = event.target.value
+      },
+
+      handleNewIngredientButton() {
+        const value = this.value
+
+        if(this.value){
+          this.$emit('newItem', value)
+          this.value = ''
+        }
+      },
+
+      selectInput(event) {
+        event.target.select();
       }
-    },
-    
+    }
   }
 </script>
