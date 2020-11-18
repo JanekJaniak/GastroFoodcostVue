@@ -57,7 +57,7 @@
     div.new__ingredient
       input.input( 
         placeholder="Ingredient name" 
-        @keypress.enter=""
+        @keypress.enter="handleNewIngredientButton"
         :value="value"
         @input="handleNewIngredientInput" 
       )
