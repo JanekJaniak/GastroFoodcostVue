@@ -10,6 +10,7 @@
       :tHeader="tHeader"
       @inputChange="updateInputValue"
       @vatChange="updateVat"
+      @grossValueChange="updateGrossValue"
     )
 
     table.table-calculate
@@ -226,7 +227,8 @@ export default {
 
       updateVat ({value, index}) { 
         this.meal.ingredients[index].vat = value
-      }
+      },
+
 
   },
 

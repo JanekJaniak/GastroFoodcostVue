@@ -44,10 +44,10 @@
               ) {{option.text}}
 
           td.table__inner
-            strong calculateNetValue
+            strong {{ calculateNetValue(quantity, price, ingredientIndex) }}
 
           td.table__inner
-            strong calculateGrossValue
+            strong {{calculateGrossValue(quantity, price, vat, ingredientIndex)}}
 
           td.table__inner.table__inner-no_border
             button.button.button-remove(
@@ -70,7 +70,6 @@
     name: 'IngredientsTable',
       data() {
         return {
-          id: '',
           value: ''
         }
       },
@@ -94,7 +93,17 @@
         this.$emit('vatChange',{value:event.target.value, index})
       },
 
+      calculateNetValue(quantity, price , index) {
+        const netValue = (quantity * price).toFixed(2)
+        console.log(index);
+        return netValue
+      },
 
+      calculateGrossValue(quantity, price, vat, index) {
+        const grossValue = (quantity * price * vat).toFixed(2)
+        console.log(index);
+        return grossValue
+      }
     },
     
   }
