@@ -2,7 +2,7 @@
   div.meal_cost_calculator
     h1.heading-primary Food Cost Calculator
 
-    h2.heading-secondary {{meal.name}}
+    h2.heading-secondary {{ meal.name }}
 
     ingredients-table(
       :ingredients="meal.ingredients"
@@ -40,7 +40,7 @@
             @focus="selectInput($event)"
           )
 
-        td.table__inner {{calculatePortionsCount(meal.total.weight, meal.portion.weight)}}
+        td.table__inner {{ calculatePortionsCount(meal.total.weight, meal.portion.weight) }}
 
     table.table-calculate
       thead
@@ -55,17 +55,17 @@
           td.table__inner
             strong Total:
 
-          td.table__inner {{calculateTotalCost('net')}}
+          td.table__inner {{ calculateTotalCost('net') }}
 
-          td.table__inner {{calculateTotalCost('gross')}}
+          td.table__inner {{ calculateTotalCost('gross') }}
           
         tr
           td.table__inner 
             strong Per portion:
 
-          td.table__inner {{calculatePortionCost('net')}}
+          td.table__inner {{ calculatePortionCost('net') }}
 
-          td.table__inner {{calculatePortionCost('gross')}}
+          td.table__inner {{ calculatePortionCost('gross') }}
 
     button.button.button-dim SAVE
 </template>
