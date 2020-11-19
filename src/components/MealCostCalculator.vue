@@ -8,7 +8,7 @@
       :ingredients="meal.ingredients"
       :vatOptions="vatOptions",
       :tHeader="tHeader"
-      @change="update"
+      @update="updateValue"
       @remove="removeItem"
       @create="addIngredient"
     )
@@ -139,7 +139,7 @@ export default {
   },
   
   methods: {
-    update ({value, index, type}) {
+    updateValue ({value, index, type}) {
       this.meal.ingredients[index][type] = parseFloat(value)
     },
 

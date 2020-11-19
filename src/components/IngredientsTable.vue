@@ -82,20 +82,22 @@ export default {
 
   methods: {
     handleInput(event, index, type) {
-      this.$emit('change', {value:event.target.value, index, type})
+      if(event.target.value) {
+        this.$emit('update', {value:event.target.value, index, type})
+      }
     },
 
     calculateValue(quantity, price, vat, index, type) {
       if(type === 'net') {
         const value = (quantity * price).toFixed(2);
 
-        this.$emit('change', {value, index, type})
+        this.$emit('update', {value, index, type})
 
         return value
       } else {
         const value = (quantity * price * vat).toFixed(2);
 
-        this.$emit('change', {value, index, type})
+        this.$emit('update', {value, index, type})
 
         return value
       }
