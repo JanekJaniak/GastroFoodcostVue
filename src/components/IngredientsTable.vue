@@ -5,11 +5,11 @@
         th.table__inner(
           v-for="header in tHeader" 
           :key="header.id"
-        ) {{header.name}}
+        ) {{ header.name }}
 
       tbody
         tr.table__tr(
-          v-for="({id, name, quantity, price, vat}, ingredientIndex) in ingredients" 
+          v-for="({ id, name, quantity, price, vat }, ingredientIndex) in ingredients" 
           :key="id"
         )
           td.table__inner
@@ -41,7 +41,7 @@
                 :key="option.id"
                 :disabled="option.disabled"
                 @select="handleInput($event, ingredientIndex, 'vat')"
-              ) {{option.text}}
+              ) {{ option.text }}
 
           td.table__inner
             strong {{ calculateValue(quantity, price, vat, ingredientIndex, 'net') }}
@@ -83,7 +83,7 @@ export default {
   methods: {
     handleInput(event, index, type) {
       if(event.target.value) {
-        this.$emit('update', {value:event.target.value, index, type})
+        this.$emit('update', { value:event.target.value, index, type })
       }
     },
 
@@ -91,13 +91,13 @@ export default {
       if(type === 'net') {
         const value = (quantity * price).toFixed(2);
 
-        this.$emit('update', {value, index, type})
+        this.$emit('update', { value, index, type })
 
         return value
       } else {
         const value = (quantity * price * vat).toFixed(2);
 
-        this.$emit('update', {value, index, type})
+        this.$emit('update', { value, index, type })
 
         return value
       }
