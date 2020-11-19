@@ -40,14 +40,14 @@
                 :value="option.value"
                 :key="option.id"
                 :disabled="option.disabled"
-                @select="handleSelect($event, ingredientIndex)"
+                @select="handleInput($event, ingredientIndex, 'vat')"
               ) {{option.text}}
 
           td.table__inner
-            strong {{ calculateNetValue(quantity, price, ingredientIndex) }}
+            strong {{ calculateValue(quantity, price, vat, ingredientIndex, 'net') }}
 
           td.table__inner
-            strong {{ calculateGrossValue(quantity, price, vat, ingredientIndex) }}
+            strong {{ calculateValue(quantity, price, vat, ingredientIndex, 'gross') }}
 
           td.table__inner.table__inner-no_border
             button.button.button-remove(
@@ -57,7 +57,7 @@
     div.new__ingredient
       input.input( 
         placeholder="Ingredient name" 
-        @keypress.enter=""
+        @keypress.enter="handleNewIngredientButton"
         :value="value"
         @input="handleNewIngredientInput" 
       )
@@ -66,65 +66,61 @@
 </template>  
 
 <script>
-  export default {
-    name: 'IngredientsTable',
-      data() {
-        return {
-          value: ''
-        }
-      },
-    
-    props: {
-      ingredients: Array,
-      vatOptions: Array,
-      tHeader: Array
+export default {
+  name: 'IngredientsTable',
+    data() {
+      return {
+        value: ''
+      }
+    },
+  
+  props: {
+    ingredients: Array,
+    vatOptions: Array,
+    tHeader: Array
+  },
+
+  methods: {
+    handleInput(event, index, type) {
+      this.$emit('change', {value:event.target.value, index, type})
     },
 
-    methods: {
-      handleInput(event, index, field) {
-        this.$emit('inputChange',{value:event.target.value, index, field})
-      },
+    calculateValue(quantity, price, vat, index, type) {
+      if(type === 'net') {
+        const value = (quantity * price).toFixed(2);
 
-      handleSelect(event, index) {
-        this.$emit('vatChange',{value:event.target.value, index})
-      },
+        this.$emit('change', {value, index, type})
 
-      calculateNetValue(quantity, price, index) {
-        const netValue = (quantity * price).toFixed(2);
-        
-        this.$emit('changeNetValue', {value:netValue, index})
+        return value
+      } else {
+        const value = (quantity * price * vat).toFixed(2);
 
-        return netValue;
-      },
+        this.$emit('change', {value, index, type})
 
-      calculateGrossValue(quantity, price, vat, index) {
-        const grossValue = (quantity * price * vat).toFixed(2);
-
-        this.$emit('changeGrossValue', {value:grossValue, index})
-
-        return grossValue;
-      },
-
-      handleRemoveButton(id) {
-        this.$emit('removeAction', id)
-      },
-
-      handleNewIngredientInput(event) {
-        this.value = event.target.value
-      },
-
-      handleNewIngredientButton() {
-        const value = this.value
-
-        if(this.value){
-          this.$emit('newItem', value)
-          this.value = ''
-        }
-      },
-
-      selectInput(event) {
-        event.target.select();
+        return value
       }
+    },
+
+    handleRemoveButton(id) {
+      this.$emit('remove', id)
+    },
+
+    handleNewIngredientInput(event) {
+      this.value = event.target.value
+    },
+
+    handleNewIngredientButton() {
+      const value = this.value
+
+      if(this.value){
+        this.$emit('create', value)
+        this.value = ''
+      }
+    },
+
+    selectInput(event) {
+      event.target.select();
     }
   }
+}
 </script>

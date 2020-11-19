@@ -8,12 +8,9 @@
       :ingredients="meal.ingredients"
       :vatOptions="vatOptions",
       :tHeader="tHeader"
-      @inputChange="updateInputValue"
-      @vatChange="updateVat"
-      @changeNetValue="updateNetValue"
-      @changeGrossValue="updateGrossValue"
-      @removeAction="removeItem"
-      @newItem="addIngredient"
+      @change="update"
+      @remove="removeItem"
+      @create="addIngredient"
     )
 
     table.table-calculate
@@ -142,26 +139,12 @@ export default {
   },
   
   methods: {
-    updateInputValue({value, index, field}) {
-      if(value) {
-        this.meal.ingredients[index][field] = parseFloat(value);
-      }
-    },
-
-    updateVat ({value, index}) { 
-      this.meal.ingredients[index].vat = value
-    },
-
-    updateNetValue ({value, index}) {
-      this.meal.ingredients[index].net = value
-    },
-
-    updateGrossValue ({value, index}) {
-      this.meal.ingredients[index].gross = value
+    update ({value, index, type}) {
+      this.meal.ingredients[index][type] = parseFloat(value)
     },
 
     removeItem(id) {
-      this.meal.ingredients = this.meal.ingredients.filter(ingredient =>ingredient.id != id)
+      this.meal.ingredients = this.meal.ingredients.filter(ingredient => ingredient.id != id)
     },
     
     addIngredient(value) {
