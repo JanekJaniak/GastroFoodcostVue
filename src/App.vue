@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Header appName="Gastro Helper"/>
-    <RecipeCostCalculator />
+    <RecipeCostCalculator/>
   </div>
 </template>
 
