@@ -1,20 +1,20 @@
 <template>
   <div id="app">
-    <HomePage msg="Gastro Helper"/>
-    <MealCostCalculator />
+    <Header appName="Gastro Helper"/>
+    <RecipeCostCalculator />
   </div>
 </template>
 
 <script>
-import HomePage from './components/HomePage.vue';
-import MealCostCalculator from "./components/MealCostCalculator.vue";
+import Header from './components/Header.vue';
+import RecipeCostCalculator from "./components/RecipeCostCalculator.vue";
 
 export default {
   name: "App",
   
   components: {
-    HomePage,
-    MealCostCalculator,
+    Header,
+    RecipeCostCalculator,
   }
 }
 </script>
