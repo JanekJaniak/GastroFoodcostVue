@@ -4,68 +4,14 @@
 
     h2.heading-secondary {{meal.name}}
 
-    table.table
-      thead
-        th.table__inner(
-          v-for="header in tHeader" 
-          :key="header.id"
-        ) {{header.name}}
-
-      tbody
-        tr.table__tr(
-          v-for="({id, name, quantity, price, vat}, ingredientIndex) in meal.ingredients" 
-          :key="id"
-        )
-          td.table__inner
-            strong {{name}}
-
-          td.table__inner
-            input.input( 
-              :id="`weight-${ingredientIndex}`"
-              placeholder="Edit"
-              v-model.number="meal.ingredients[ingredientIndex].quantity"  
-              type="number"
-              @focus="selectInput($event)"
-            )
-
-          td.table__inner
-            input.input( 
-              :id="`price-${ingredientIndex}`" 
-              placeholder="Edit" 
-              v-model.number="meal.ingredients[ingredientIndex].price" 
-              type="number"
-              @focus="selectInput($event)"
-            )
-
-          td.table__inner
-            select(v-model="meal.ingredients[ingredientIndex].vat")
-              option( 
-                v-for="option in vatOptions" 
-                :value="option.value"
-                :key="option.id"
-                :disabled="option.disabled"
-              ) {{option.text}}
-
-          td.table__inner
-            strong {{calculateNetValue(quantity, price, ingredientIndex)}}
-
-          td.table__inner
-            strong {{calculateGrossValue(quantity, price, vat, ingredientIndex)}}
-
-          td.table__inner.table__inner-no_border
-            button.button.button-remove(
-              @click="removeItem(id)"
-            ) X
-
-    div.new__ingredient
-      input.input( 
-        placeholder="Ingredient name" 
-        @keypress.enter="addIngredient()"  
-        @input="handleInput" 
-        :value="newIngredientInputValue"
-      )
-
-      button.button.button-dim(@click="addIngredient()") Add new ingredient
+    ingredients-table(
+      :ingredients="meal.ingredients"
+      :vatOptions="vatOptions",
+      :tHeader="tHeader"
+      @update="updateValue"
+      @remove="removeItem"
+      @create="addIngredient"
+    )
 
     table.table-calculate
       thead
@@ -125,6 +71,7 @@
 </template>
 
 <script>
+import IngredientsTable from './IngredientsTable'
 import { uuid } from 'vue-uuid'; 
 export default {
   name: 'MealCostCalculator',
@@ -192,89 +139,75 @@ export default {
   },
   
   methods: {
-      calculateNetValue(quantity, price, ingredientIndex) {
-        const netValue = (quantity * price).toFixed(2);
-        this.meal.ingredients[ingredientIndex].net = netValue
+    updateValue ({value, index, type}) {
+      this.meal.ingredients[index][type] = parseFloat(value)
+    },
 
-        return netValue;
-      },
+    removeItem(id) {
+      this.meal.ingredients = this.meal.ingredients.filter(ingredient => ingredient.id != id)
+    },
+    
+    addIngredient(value) {
+      const newID = uuid.v4();
+      const newIngredient = {
+        id: newID,
+        name: value,
+        quantity: 0,
+        price: 0,
+        vat: 1,
+        gross: 0,
+        net: 0,
+      };
 
-      calculateGrossValue(quantity, price, vat, ingredientIndex) {
-        const grossValue = (quantity * price * vat).toFixed(2);
-        this.meal.ingredients[ingredientIndex].gross = grossValue;
+      this.meal.ingredients.push(newIngredient);
+    },
 
-        return grossValue;
-      },
+    calculatePortionsCount(totalWeight, portionWeight) {
+      let portionCount = 0;
 
-      handleInput(event) {
-        this.newIngredientInputValue = event.target.value;
-      },
+      if (this.meal.total.weight && this.meal.portion.weight ) {  
+        portionCount = totalWeight / (portionWeight / 1000);
+        portionCount = portionCount < 1 ? 0 : Math.round(portionCount);
 
-      addIngredient() {
-        const newID = uuid.v4();
-
-        const newIngredient = {
-          id: newID,
-          name: this.newIngredientInputValue,
-          quantity: 0,
-          price: 0,
-          vat: 1,
-          gross: 0,
-          net: 0,
-        };
-
-        if(this.newIngredientInputValue) {
-          this.meal.ingredients.push(newIngredient);
-          this.newIngredientInputValue = '';
-        }
-      },
-
-      calculatePortionsCount(totalWeight, portionWeight) {
-        let portionCount = 0;
-
-        if (this.meal.total.weight && this.meal.portion.weight ) {  
-          portionCount = totalWeight / (portionWeight / 1000);
-          portionCount = portionCount < 1 ? 0 : Math.round(portionCount);
-
-          this.meal.portion.count = portionCount;
-        }
-
-        return portionCount;
-      },
-
-      calculateTotalCost(costType) {
-        let total = 0;
-        this.meal.ingredients.forEach(ingredient => {
-          total += parseFloat(ingredient[costType]);
-        });
-
-        total = parseFloat(total.toFixed(2));
-        this.meal.total.cost[costType] = total;
-        
-        return total;
-      },
-
-      calculatePortionCost(costType) {
-        let portion = 0;
-        
-        if (this.meal.total.cost[costType] && this.meal.portion.count) {
-          portion = (this.meal.total.cost[costType] / this.meal.portion.count).toFixed(2); 
-          
-          this.meal.portion.cost[costType] = parseFloat(portion);
-        }
-
-        return this.meal.portion.cost[costType];
-      },
-
-      removeItem(id) {
-        this.meal.ingredients = this.meal.ingredients.filter(ingredient =>ingredient.id != id)
-      },
-
-      selectInput(event) {
-        event.target.select();
+        this.meal.portion.count = portionCount;
       }
 
+      return portionCount;
+    },
+
+    calculateTotalCost(costType) {
+      let total = 0;
+      this.meal.ingredients.forEach(ingredient => {
+        total += parseFloat(ingredient[costType]);
+      });
+
+      total = parseFloat(total.toFixed(2));
+
+      this.meal.total.cost[costType] = total;
+      
+      return total;
+    },
+
+    calculatePortionCost(costType) {
+      let portion = 0;
+      
+      if (this.meal.total.cost[costType] && this.meal.portion.count) {
+        portion = (this.meal.total.cost[costType] / this.meal.portion.count).toFixed(2); 
+        
+        this.meal.portion.cost[costType] = parseFloat(portion);
+      }
+
+      return this.meal.portion.cost[costType];
+    },
+
+    selectInput(event) {
+      event.target.select();
+    },
   },
+
+  components: {
+    'ingredients-table': IngredientsTable
+  }
 }
 </script>
 
