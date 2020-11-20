@@ -1,7 +1,7 @@
 <template lang="pug">
-  div#app
+  div.app
     h1.heading-main Gastro Helper
-      div#nav
+      div.nav
         router-link.heading-primary(to="/") Meal Cost Calculator / 
 
         router-link.heading-primary(to="/IngredientLossCalc") Ingredient Loss Calculator
@@ -12,7 +12,7 @@
 <style lang='sass'>
 @import './style.sass'
 
-#app 
+.app 
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
@@ -20,13 +20,12 @@
   color: #2c3e50
   margin-top: 60px
 
-#nav 
+.nav 
   padding: 30px
+  a 
+    font-weight: bold
+    color: rgb(2, 2, 184)
 
-#nav a 
-  font-weight: bold
-  color: rgb(2, 2, 184)
-
-#nav a.router-link-exact-active 
-  color: rgb(11, 158, 91)
+    &.router-link-exact-active 
+        color: rgb(2, 130, 91)
 </style>

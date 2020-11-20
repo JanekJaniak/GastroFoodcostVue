@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.ingredient_loss_ingredient 
-    h1.headin-primary ingredient loss calculator / in progress
+  div.ingredient_loss_calculator
+    h1.heading-primary ingredient loss calculator / in progress
         
 </template>
