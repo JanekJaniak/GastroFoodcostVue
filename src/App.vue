@@ -1,23 +1,13 @@
-<template>
-  <div id="app">
-    <Header appName="Gastro Helper"/>
-    <RecipeCostCalculator/>
-  </div>
+<template lang="pug">
+  div#app
+    h1.heading-main Gastro Helper
+      div#nav
+        router-link.heading-primary(to="/") Meal Cost Calculator / 
+
+        router-link.heading-primary(to="/IngredientLossCalc") Ingredient Loss Calculator
+
+    router-view
 </template>
-
-<script>
-import Header from './components/Header.vue';
-import RecipeCostCalculator from "./components/RecipeCostCalculator.vue";
-
-export default {
-  name: "App",
-  
-  components: {
-    Header,
-    RecipeCostCalculator,
-  }
-}
-</script>
 
 <style lang='sass'>
 @import './style.sass'
@@ -30,4 +20,13 @@ export default {
   color: #2c3e50
   margin-top: 60px
 
+#nav 
+  padding: 30px
+
+#nav a 
+  font-weight: bold
+  color: rgb(2, 2, 184)
+
+#nav a.router-link-exact-active 
+  color: rgb(11, 158, 91)
 </style>
