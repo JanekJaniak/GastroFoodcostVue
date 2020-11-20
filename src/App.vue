@@ -22,6 +22,7 @@
 
 .nav 
   padding: 30px
+  
   a 
     font-weight: bold
     color: rgb(2, 2, 184)
