@@ -23,7 +23,6 @@
         td.table__inner
           input.input( 
             type="number" 
-            :id="`totalWeight`"
             placeholder="Edit"
             v-model.number="meal.total.weight" 
             @focus="selectInput($event)"
@@ -32,7 +31,6 @@
         td.table__inner
           input.input( 
             type="number" 
-            :id="`portionWeight`" 
             placeholder="Edit" 
             v-model.number="meal.portion.weight" 
             @focus="selectInput($event)"
@@ -133,6 +131,7 @@ export default {
         {id: 5, name: 'Net value'}, 
         {id: 6, name: 'Gross value'} 
       ],
+      value: ''
     }
   },
   
