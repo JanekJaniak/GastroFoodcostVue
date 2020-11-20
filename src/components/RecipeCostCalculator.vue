@@ -1,7 +1,5 @@
 <template lang="pug">
   div.meal_cost_calculator
-    h1.heading-primary Food Cost Calculator
-
     h2.heading-secondary {{ meal.name }}
 
     ingredients-table(
@@ -74,7 +72,7 @@
 import IngredientsTable from './IngredientsTable'
 import { uuid } from 'vue-uuid'; 
 export default {
-  name: 'MealCostCalculator',
+  name: 'RecipeCostCalculator',
    data() {
     return {
       meal: {

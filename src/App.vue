@@ -1,28 +1,18 @@
-<template>
-  <div id="app">
-    <HomePage msg="Gastro Helper"/>
-    <MealCostCalculator />
-  </div>
+<template lang="pug">
+  div.app
+    h1.heading-main Gastro Helper
+      div.nav
+        router-link.heading-primary(to="/") Meal Cost Calculator / 
+
+        router-link.heading-primary(to="/IngredientLossCalc") Ingredient Loss Calculator
+
+    router-view
 </template>
-
-<script>
-import HomePage from './components/HomePage.vue';
-import MealCostCalculator from "./components/MealCostCalculator.vue";
-
-export default {
-  name: "App",
-  
-  components: {
-    HomePage,
-    MealCostCalculator,
-  }
-}
-</script>
 
 <style lang='sass'>
 @import './style.sass'
 
-#app 
+.app 
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
@@ -30,4 +20,13 @@ export default {
   color: #2c3e50
   margin-top: 60px
 
+.nav 
+  padding: 30px
+  
+  a 
+    font-weight: bold
+    color: rgb(2, 2, 184)
+
+    &.router-link-exact-active 
+        color: rgb(2, 130, 91)
 </style>
